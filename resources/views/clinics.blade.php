@@ -1,38 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
+    <!-- Create Clinics Form... -->
 
-    <!-- Bootstrap Boilerplate... -->
-
-    <div class="panel-body">
-        <!-- Display Validation Errors -->
-
-        <!-- New Task Form -->
-        <form action="/cadastro/clinica" method="POST" class="form-horizontal">
-            {{ csrf_field() }}
-
-            <!-- Task Name -->
-            <div class="form-group">
-                <label for="clinic" class="col-sm-3 control-label">Clinic</label>
-
-                <div class="col-sm-6">
-                    <input type="text" name="cnpj" id="clinic-name" class="form-control">
-                </div>
-                <div class="col-sm-6">
-                    <input type="text" name="nome" id="clinic-name" class="form-control">
-                </div>
+    <!-- Current Clinics -->
+    @if (count($clinics) > 0)
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Current Clinics
             </div>
 
-            <!-- Add Task Button -->
-            <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-6">
-                    <button type="submit" class="btn btn-default">
-                        <i class="fa fa-plus"></i> Add Clinic
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
+            <div class="panel-body">
+                <table class="table table-striped clinic-table">
 
-    <!-- TODO: Current Tasks -->
+                    <!-- Table Headings -->
+                    <thead>
+                        <th> Clinic</th>
+                        <th>&nbsp;</th>
+                    </thead>
+
+                    <!-- Table Body -->
+                    <tbody>
+                        @foreach ($clinics as $clinic)
+                            <tr>
+                                <!-- Clinic Name -->
+                                <td class="table-text">
+                                    <div>{{ $clinic->nome }}</div>
+                                </td>
+
+                                <td>
+                                    <!-- TODO: Delete Button -->
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
 @endsection
