@@ -24,9 +24,11 @@
                         @foreach ($clinics as $clinic)
                             <tr>
                                 <!-- Clinic Name -->
-                                <td class="table-text">
-                                    <div>{{ $clinic->nome }}</div>
-                                </td>
+                                    <td class="table-text">
+                                        <a href="{{ route('show-clinic', [$clinic->id]) }}">
+                                            <div>{{ $clinic->nome }}</div>
+                                        </a>
+                                    </td>
 
                                 <td>
                                     <!-- TODO: Delete Button -->

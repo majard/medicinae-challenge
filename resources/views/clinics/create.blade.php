@@ -9,7 +9,7 @@
         @include('common.errors')
 
         <!-- New Clinic Form -->
-        <form action="/cadastro/clinica" method="POST" class="form-horizontal">
+        <form class="form-horizontal">
             {{ csrf_field() }}
 
             <!-- Clinic Info -->
@@ -27,7 +27,7 @@
             <!-- Add Clinic Button -->
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-6">
-                    <button type="submit" class="btn btn-default">
+                    <button type="button" class="btn btn-default create-clinic">
                         <i class="fa fa-plus"></i> Add Clinic
                     </button>
                 </div>
@@ -35,55 +35,4 @@
         </form>
     </div>
     
-<script type="text/javascript">
-
-
-    $(document).ready(function() {
-
-        $(".btn-submit").click(function(e){
-
-            e.preventDefault();
-
-            var cnpj = $("input[name='cnpj']").val();
-
-            var nome = $("input[name='nome']").val();
-
-            $.ajax({
-
-                url: "/cadastro/clinica",
-
-                type:'POST',
-
-                data: {cnpj:cnpj, nome:nome},
-
-                success: function(data) {
-
-                    if($.isEmptyObject(data.error)){
-
-                        alert(data.success);
-
-                    }else{
-
-                        printErrorMsg(data.error);
-
-                    }
-                }
-            });
-        }); 
-        
-        function printErrorMsg (msg) {
-
-            $(".print-error-msg").find("ul").html('');
-
-            $(".print-error-msg").css('display','block');
-
-            $.each( msg, function( key, value ) {
-
-                $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-
-            });
-        }
-    });
-    
-</script>
 @endsection

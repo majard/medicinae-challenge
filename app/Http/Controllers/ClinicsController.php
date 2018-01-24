@@ -12,7 +12,11 @@ use Validator;
 use App\Clinic;
 
 class ClinicsController extends Controller
-{
+{    
+    public function __construct() {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
     protected $rules =
     [
         'nome' => 'required',
@@ -33,7 +37,7 @@ class ClinicsController extends Controller
         //
     }
 
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -64,7 +68,7 @@ class ClinicsController extends Controller
             $clinic->user_id =  Auth::user()->id;
             $clinic->save();
 
-            return response()->json($clinic);
+            return response()->json($clinic, 201);
         }
         //
     }
@@ -80,8 +84,14 @@ class ClinicsController extends Controller
         //
         
         $clinic = Clinic::findOrFail($id);
+        
+        if(!$clinic) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
 
-        return view('clinic.show', ['clinic' => $clinic]);
+        return view('clinics.show', ['clinic' => $clinic]);
     }
 
     /**
@@ -106,18 +116,25 @@ class ClinicsController extends Controller
     {
         //
         $validator = Validator::make(Input::all(), $this->rules);
+
         if ($validator->fails()) {
             return Response::json(array('errors' => $validator->getMessageBag()->toArray()));
         } else {
 
             $clinic = Clinic::findOrFail($id);
 
+            if(!$clinic) {
+                return response()->json([
+                    'message'   => 'Record not found',
+                ], 404);
+            }
+
             $clinic->nome = $request->nome;
             $clinic->cnpj = $request->cnpj;
             $clinic->user_id =  Auth::user()->id;
             $clinic->save();
 
-            return response()->json($clinic);
+            return response()->json($clinic, 201);
         }
     }
 
@@ -132,8 +149,15 @@ class ClinicsController extends Controller
         //
         
         $clinic = Clinic::findOrFail($id);
+
+        if(!$clinic) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
+
         $clinic->delete();
 
-        return response()->json($clinic);
+        return response()->json($clinic, 200);
     }
 }

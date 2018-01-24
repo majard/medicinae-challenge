@@ -24,13 +24,17 @@ Route::get('/', function () {
 
 Route::get('/clinicas', 'ClinicsController@index')->name('clinics');
 
+Route::get('/clinicas/{id}', 'ClinicsController@show')->name('show-clinic');
+
+Route::delete('/clinicas/{id}', 'ClinicsController@destroy')->name('delete-clinic');
+
 Route::get('/planos-de-saude', function () {
     $health_insurance_companies = HealthInsuranceCompany::orderBy('nome', 'asc')->get();
 
     return view('health_insurance', [
         'health_insurance_companies' => $health_insurance_companies
     ]);
-})->name('health_insurance_signup');
+})->name('health_insurance_companies');
 
 
 Route::get('/cadastro/clinica', 'ClinicsController@create')->name('display_clinic_signup');
