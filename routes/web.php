@@ -34,6 +34,7 @@ Route::get('/cadastro/clinica', 'ClinicsController@create')->name('display_clini
 
 Route::post('/cadastro/clinica', 'ClinicsController@store')->name('clinic_signup');
 
+
 Route::get('/planos-de-saude', function () {
     $health_insurance_companies = HealthInsuranceCompany::orderBy('nome', 'asc')->get();
 
@@ -42,10 +43,9 @@ Route::get('/planos-de-saude', function () {
     ]);
 })->name('health_insurance_companies');
 
+Route::get('/cadastro/plano-de-saude', 'HealthInsuranceCompanyController@create')->name('display_health_insurance_signup');
 
-Route::post('/cadastro/plano-de-saude', function (Request $request) {
-    //
-})->name('health_insurance_signup');
+Route::post('/cadastro/plano-de-saude', 'HealthInsuranceCompanyController@store')->name('health_insurance_signup');
 
 Auth::routes();
 

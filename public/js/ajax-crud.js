@@ -115,4 +115,42 @@ $(document).ready(function() {
         });
     });
 
+    
+
+
+
+    $(".create-health_insurance_company").click(function(e){
+        
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
+        
+        e.preventDefault();
+        
+        console.log("chegou aqui");
+        
+        $.ajax({            
+            
+            url: "/cadastro/plano-de-saude",
+
+            type:'POST',        
+            processData: false,
+            contentType: false,
+
+            data: new FormData($("#upload_form")[0]),
+            
+            success: function(data) {
+
+                if($.isEmptyObject(data.error)){         
+                    console.log(data);
+                    toastr.success('O plano de saúde foi cadastrado com sucesso!', 'Success Alert', {timeOut: 5000});
+
+                }else{                    
+                    toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
+                }
+            }
+        });
+    });
 });
