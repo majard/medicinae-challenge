@@ -16,8 +16,6 @@ $(document).ready(function() {
 
         var nome = $("input[name='nome']").val();        
 
-        console.log(cnpj);
-        console.log(nome);
         $.ajax({            
             
             url: "/cadastro/clinica",
@@ -41,14 +39,14 @@ $(document).ready(function() {
 
 
     // Edit a clinic
-    $(document).on('click', '.edit-modal', function() {
+    $(document).on('click', '.clinic.edit-modal', function() {
         $('.modal-title').text('Edit');
         $('#nome_edit').val($(this).data('nome'));
         $('#cnpj_edit').val($(this).data('cnpj'));
         id = $(this).val();
         $('#editModal').modal('show');
     });
-    $('.modal-footer').on('click', '.edit', function() {
+    $('.modal-footer').on('click', '.clinic.edit', function() {
 
         $.ajaxSetup({
             headers: {
@@ -97,7 +95,7 @@ $(document).ready(function() {
         $('#deleteModal').modal('show');
         id = $(this).val();
     });
-    $('.modal-footer').on('click', '.delete', function() {
+    $('.modal-footer').on('click', '.clinic.delete', function() {
                 
         $.ajaxSetup({
             headers: {
@@ -128,9 +126,7 @@ $(document).ready(function() {
         })
         
         e.preventDefault();
-        
-        console.log("chegou aqui");
-        
+                
         $.ajax({            
             
             url: "/cadastro/plano-de-saude",
@@ -153,4 +149,89 @@ $(document).ready(function() {
             }
         });
     });
+
+
+    
+    // Edit a clinic
+    $(document).on('click', '.health-insurance.edit-modal', function() {
+        $('.modal-title').text('Edit');
+        $('#nome_edit').val($(this).data('nome'));
+        $('#status_edit').val($(this).data('status'));
+        $('#logo_edit').val($(this).data('logo'));
+        id = $(this).val();
+        $('#editModal').modal('show');
+    });
+    $('.modal-footer').on('click', '.health_insurance.edit', function() {
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
+
+        var formData = new FormData($("#upload_form")[0]);
+        formData.append('_method', 'PUT');
+
+        $.ajax({
+            
+            type: 'POST',
+            url: '/planos-de-saude/' + id,                
+            
+            processData: false,
+            contentType: false,
+
+            data: formData,
+            
+            success: function(data) {
+
+                console.log(data);
+                $('.errorTitle').addClass('hidden');
+                $('.errorContent').addClass('hidden');
+
+                if ((data.errors)) {
+                    setTimeout(function () {
+                        $('#editModal').modal('show');
+                        toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
+                    }, 500);
+
+                    if (data.errors.title) {
+                        $('.errorTitle').removeClass('hidden');
+                        $('.errorTitle').text(data.errors.title);
+                    }
+                    if (data.errors.content) {
+                        $('.errorContent').removeClass('hidden');
+                        $('.errorContent').text(data.errors.content);
+                    }
+                } else {
+                    toastr.success('A edição foi feita com sucesso!', 'Success Alert', {timeOut: 5000});                    
+                }
+            }
+        });
+    });
+    
+    // delete a health insurance company
+    $(document).on('click', '.health_insurance.delete-modal', function() {
+        $('.modal-title').text('Delete');
+        $('#deleteModal').modal('show');
+        id = $(this).val();
+    });
+    $('.modal-footer').on('click', '.health_insurance.delete', function() {
+        console.log("gonna delete");
+                
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/planos-de-saude/' + id,
+
+            success: function(data) {
+                toastr.success('O plano de saúde foi deletada com sucesso!', 'Success Alert', {timeOut: 5000});
+            }
+        });
+    });
+
 });

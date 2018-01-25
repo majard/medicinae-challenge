@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 use Response;
 use Validator;
@@ -21,7 +22,7 @@ class HealthInsuranceCompanyController extends Controller
     protected $rules =
     [
         'nome' => 'required',
-        'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:width=150,height=150',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:width=150,height=150',
     ];
 
     /**
@@ -59,23 +60,24 @@ class HealthInsuranceCompanyController extends Controller
      */
     public function store(Request $request)
     {                
-   
         $validator = Validator::make(Input::all(), $this->rules);
 
+        
         if ($validator->fails()) {
             return Response::json(array('errors' => $validator->getMessageBag()->toArray()));
         } else {        
-            $path = "nil";
-            
-            if (Input::hasFile('image')) {
-                $path = "exists";
-            }
+
             $health_insurance_company = new HealthInsuranceCompany;
             $health_insurance_company->nome = $request->nome;
-            $health_insurance_company->status =  true;
-            $path = $request->file('image')->store('test');
-            $url = Storage::url($path);
-            $health_insurance_company->logo = $url; 
+            $health_insurance_company->status =  true;            
+
+            $image = $request->file('image');
+            $imageFileName = time() . '.' . $image->getClientOriginalExtension();
+            $s3 = \Storage::disk('s3');
+            $filePath = '/logos/' . $imageFileName;
+            $s3->put($filePath, file_get_contents($image), 'public');
+            $health_insurance_company->logo = $filePath; 
+            
             $health_insurance_company->save();
 
             return response()->json($health_insurance_company, 201);
@@ -100,8 +102,10 @@ class HealthInsuranceCompanyController extends Controller
                 'message'   => 'Record not found',
             ], 404);
         }
+        
+        $url = Storage::url($health_insurance_company->logo);
 
-        return view('health_insurance_companies.show', ['health_insurance_company' => $health_insurance_company]);
+        return view('health_insurance_companies.show', ['logo_url' => $url, 'health_insurance_company' => $health_insurance_company]);
     }
 
     /**
@@ -140,8 +144,21 @@ class HealthInsuranceCompanyController extends Controller
             }
 
             $health_insurance_company->nome = $request->nome;
-            $health_insurance_company->cnpj = $request->cnpj;
-            $health_insurance_company->user_id =  Auth::user()->id;
+            $health_insurance_company->status =  $request->status;
+            
+            $path = $health_insurance_company->logo;
+
+            if(Storage::disk('s3')->exists($path) && Input::hasFile('image')) {
+                Storage::disk('s3')->delete($path);
+            }
+
+            $image = $request->file('image');
+            $imageFileName = time() . '.' . $image->getClientOriginalExtension();
+            $s3 = \Storage::disk('s3');
+            $filePath = '/logos/' . $imageFileName;
+            $s3->put($filePath, file_get_contents($image), 'public');
+            $health_insurance_company->logo = $filePath; 
+
             $health_insurance_company->save();
 
             return response()->json($health_insurance_company, 201);
@@ -164,6 +181,12 @@ class HealthInsuranceCompanyController extends Controller
             return response()->json([
                 'message'   => 'Record not found',
             ], 404);
+        }
+
+        $path = $health_insurance_company->logo;
+
+        if(Storage::disk('s3')->exists($path)) {
+            Storage::disk('s3')->delete($path);
         }
 
         $health_insurance_company->delete();

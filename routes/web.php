@@ -39,9 +39,13 @@ Route::get('/planos-de-saude', 'HealthInsuranceCompanyController@index')->name('
 
 Route::get('/planos-de-saude/{id}', 'HealthInsuranceCompanyController@show')->name('show_health_insurance_company');
 
-Route::get('/cadastro/plano-de-saude', 'HealthInsuranceCompanyController@create')->name('display_health_insurance_signup');
+Route::put('/planos-de-saude/{id}', 'HealthInsuranceCompanyController@update')->name('update_health_insurance_company');
 
-Route::post('/cadastro/plano-de-saude', 'HealthInsuranceCompanyController@store')->name('health_insurance_signup');
+Route::delete('/planos-de-saude/{id}', 'HealthInsuranceCompanyController@destroy')->name('delete_health_insurance_company');
+
+Route::get('/cadastro/plano-de-saude', 'HealthInsuranceCompanyController@create')->name('display_health_insurance_company_signup');
+
+Route::post('/cadastro/plano-de-saude', 'HealthInsuranceCompanyController@store')->name('health_insurance_company_signup');
 
 Auth::routes();
 

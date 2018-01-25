@@ -33,7 +33,7 @@
                         <button type="button" class="btn btn-danger delete-modal" value="{{$clinic->id}}" data-dismiss="modal">
                             <span class='glyphicon glyphicon-trash'></span> Deletar
                         </button>      
-                        <button class="edit-modal btn btn-edit" data-nome="{{$clinic->nome}}" data-cnpj="{{$clinic->cnpj}}" value="{{$clinic->id}}">
+                        <button class="clinic edit-modal btn btn-edit" data-nome="{{$clinic->nome}}" data-cnpj="{{$clinic->cnpj}}" value="{{$clinic->id}}">
                         <span class="glyphicon glyphicon-edit"></span> Editar
                         </button>
                  
@@ -69,7 +69,7 @@
                         </div>
                     </form>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary edit" data-dismiss="modal">
+                        <button type="button" class="btn btn-primary clinic edit" data-dismiss="modal">
                             <span class='glyphicon glyphicon-check'></span> Edit
                         </button>
                         <button type="button" class="btn btn-warning" data-dismiss="modal">
@@ -93,7 +93,7 @@
                     <h3 class="text-center">Tem certeza que deseja deletar essa clinica?</h3>
                     <br />
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger delete" data-dismiss="modal">
+                        <button type="button" class="btn btn-danger clinic delete" data-dismiss="modal">
                             <span id="" class='glyphicon glyphicon-trash'></span> Deletar
                         </button>
                         <button type="button" class="btn btn-warning" data-dismiss="modal">

@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <!-- Create health_insurance_companies Form... -->
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <a  href="{{ route('display_health_insurance_company_signup') }}"> Cadastrar um novo plano de saúde</a>
+        </div>
+    </div>
 
     <!-- Current health_insurance_companies -->
     @if (count($health_insurance_companies) > 0)
