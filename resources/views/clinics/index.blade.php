@@ -7,7 +7,7 @@
     @if (count($clinics) > 0)
         <div class="panel panel-default">
             <div class="panel-heading">
-                Current Clinics
+                Clinicas cadastradas:
             </div>
 
             <div class="panel-body">

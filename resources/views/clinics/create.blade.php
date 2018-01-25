@@ -14,13 +14,19 @@
 
             <!-- Clinic Info -->
             <div class="form-group">
-                <label for="clinic" class="col-sm-3 control-label">Clinic</label>
+                <div class="row">
+                    <label for="cnpj" class="col-sm-3 control-label">CNPJ</label>
 
-                <div class="col-sm-6">
-                    <input type="text" name="cnpj" id="clinic-cnpj" class="form-control">
+                    <div class="col-sm-6">
+                        <input type="text" name="cnpj" id="clinic-cnpj" class="form-control">
+                    </div>
                 </div>
-                <div class="col-sm-6">
-                    <input type="text" name="nome" id="clinic-name" class="form-control">
+                <div class="row">
+                    <label for="clinic-name" class="col-sm-3 control-label">Nome da Clínica</label>
+
+                    <div class="col-sm-6">
+                        <input type="text" name="nome" id="clinic-name" class="form-control">
+                    </div>
                 </div>
             </div>
 

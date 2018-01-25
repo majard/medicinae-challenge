@@ -26,7 +26,13 @@ Route::get('/clinicas', 'ClinicsController@index')->name('clinics');
 
 Route::get('/clinicas/{id}', 'ClinicsController@show')->name('show-clinic');
 
+Route::put('/clinicas/{id}', 'ClinicsController@update')->name('update-clinic');
+
 Route::delete('/clinicas/{id}', 'ClinicsController@destroy')->name('delete-clinic');
+
+Route::get('/cadastro/clinica', 'ClinicsController@create')->name('display_clinic_signup');
+
+Route::post('/cadastro/clinica', 'ClinicsController@store')->name('clinic_signup');
 
 Route::get('/planos-de-saude', function () {
     $health_insurance_companies = HealthInsuranceCompany::orderBy('nome', 'asc')->get();
@@ -36,10 +42,6 @@ Route::get('/planos-de-saude', function () {
     ]);
 })->name('health_insurance_companies');
 
-
-Route::get('/cadastro/clinica', 'ClinicsController@create')->name('display_clinic_signup');
-
-Route::post('/cadastro/clinica', 'ClinicsController@store')->name('clinic_signup');
 
 Route::post('/cadastro/plano-de-saude', function (Request $request) {
     //

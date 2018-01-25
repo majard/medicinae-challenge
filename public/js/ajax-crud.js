@@ -28,28 +28,91 @@ $(document).ready(function() {
 
             success: function(data) {
 
-                if($.isEmptyObject(data.error)){            
+                if($.isEmptyObject(data.error)){         
 
-                    alert(data.success);
+                    toastr.success('A clínica foi cadastrada com sucesso!', 'Success Alert', {timeOut: 5000});
 
-                }else{
-
-                    console.log("deu ruim");
+                }else{                            
+                    toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
                 }
             }
         });
     }); 
 
-    function printErrorMsg (msg) {
 
-        $(".print-error-msg").find("ul").html('');
+    // Edit a clinic
+    $(document).on('click', '.edit-modal', function() {
+        $('.modal-title').text('Edit');
+        $('#nome_edit').val($(this).data('nome'));
+        $('#cnpj_edit').val($(this).data('cnpj'));
+        id = $(this).val();
+        $('#editModal').modal('show');
+    });
+    $('.modal-footer').on('click', '.edit', function() {
 
-        $(".print-error-msg").css('display','block');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
 
-        $.each( msg, function( key, value ) {
+        $.ajax({
+            
+            type: 'PUT',
+            url: '/clinicas/' + id,
+            data: {
+                'id': id,
+                'nome': $('#nome_edit').val(),
+                'cnpj': $('#cnpj_edit').val()
+            },
+            success: function(data) {
+                $('.errorTitle').addClass('hidden');
+                $('.errorContent').addClass('hidden');
 
-            $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+                if ((data.errors)) {
+                    setTimeout(function () {
+                        $('#editModal').modal('show');
+                        toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
+                    }, 500);
 
+                    if (data.errors.title) {
+                        $('.errorTitle').removeClass('hidden');
+                        $('.errorTitle').text(data.errors.title);
+                    }
+                    if (data.errors.content) {
+                        $('.errorContent').removeClass('hidden');
+                        $('.errorContent').text(data.errors.content);
+                    }
+                } else {
+                    toastr.success('A edição foi feita com sucesso!', 'Success Alert', {timeOut: 5000});                    
+                }
+            }
         });
-    }
+    });
+
+
+    // delete a clinic
+    $(document).on('click', '.delete-modal', function() {
+        $('.modal-title').text('Delete');
+        $('#deleteModal').modal('show');
+        id = $(this).val();
+    });
+    $('.modal-footer').on('click', '.delete', function() {
+                
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/clinicas/' + id,
+
+            success: function(data) {
+                toastr.success('A clinica foi deletada com sucesso!', 'Success Alert', {timeOut: 5000});
+            }
+        });
+    });
+
 });
