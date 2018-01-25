@@ -25,7 +25,7 @@
                             <tr>
                                 <!-- Health Insurance Company Name -->
                                     <td class="table-text">
-                                        <a href="{{ route('show-health_insurance_company', [$health_insurance_company->id]) }}">
+                                        <a href="{{ route('show_health_insurance_company', [$health_insurance_company->id]) }}">
                                             <div>{{ $health_insurance_company->nome }}</div>
                                         </a>
                                     </td>

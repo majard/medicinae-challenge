@@ -5,7 +5,7 @@
 <div class="panel panel-default">
 
     <div class="panel-body">
-        <table class="table table-striped clinic-table">
+        <table class="table table-striped health_insurance_company-table">
 
 
             <!-- Table Body -->
@@ -21,19 +21,22 @@
                     </td>
                 </tr>
                 <tr>
-                    <!-- Clinic Name -->
+                    <!-- Health Insurance Company Name -->
                     <td class="table-text">
-                        <div>{{ $clinic->nome }}</div>
+                        <div>{{ $health_insurance_company->nome }}</div>
                     </td>
                     <td class="table-text">
-                        <div>{{ $clinic->cnpj }}</div>
+                        <div>{{ $health_insurance_company->status }}</div>
+                    </td>                            
+                    <td class="table-text">
+                        <div><img src="{{ $health_insurance_company->logo }}"> </div>
                     </td>                            
                     
                     <td>                        
-                        <button type="button" class="btn btn-danger delete-modal" value="{{$clinic->id}}" data-dismiss="modal">
+                        <button type="button" class="btn btn-danger delete-modal" value="{{$health_insurance_company->id}}" data-dismiss="modal">
                             <span class='glyphicon glyphicon-trash'></span> Deletar
                         </button>      
-                        <button class="edit-modal btn btn-edit" data-nome="{{$clinic->nome}}" data-cnpj="{{$clinic->cnpj}}" value="{{$clinic->id}}">
+                        <button class="edit-modal btn btn-edit" data-nome="{{$health_insurance_company->nome}}" data-status="{{$health_insurance_company->status}}" value="{{$health_insurance_company->id}}">
                         <span class="glyphicon glyphicon-edit"></span> Editar
                         </button>
                  
@@ -55,7 +58,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="nome">Nome da Clinica:</label>
+                            <label class="control-label col-sm-2" for="nome">Nome do Plano de Saúde:</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="nome_edit">
                             </div>
@@ -90,7 +93,7 @@
                     <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body">
-                    <h3 class="text-center">Tem certeza que deseja deletar essa clinica?</h3>
+                    <h3 class="text-center">Tem certeza que deseja deletar esse plano de saúde?</h3>
                     <br />
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger delete" data-dismiss="modal">

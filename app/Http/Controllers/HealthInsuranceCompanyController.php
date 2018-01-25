@@ -31,7 +31,7 @@ class HealthInsuranceCompanyController extends Controller
      */
     public function index()
     {
-        $health_insurance_companies = Clinic::orderBy('nome', 'asc')->get();
+        $health_insurance_companies = HealthInsuranceCompany::orderBy('nome', 'asc')->get();
     
         return view('health_insurance_companies.index', [
             'health_insurance_companies' => $health_insurance_companies
@@ -74,7 +74,8 @@ class HealthInsuranceCompanyController extends Controller
             $health_insurance_company->nome = $request->nome;
             $health_insurance_company->status =  true;
             $path = $request->file('image')->store('test');
-            $health_insurance_company->logo = $path; 
+            $url = Storage::url($path);
+            $health_insurance_company->logo = $url; 
             $health_insurance_company->save();
 
             return response()->json($health_insurance_company, 201);
@@ -92,7 +93,7 @@ class HealthInsuranceCompanyController extends Controller
     {
         //
         
-        $health_insurance_company = Clinic::findOrFail($id);
+        $health_insurance_company = HealthInsuranceCompany::findOrFail($id);
         
         if(!$health_insurance_company) {
             return response()->json([
@@ -130,7 +131,7 @@ class HealthInsuranceCompanyController extends Controller
             return Response::json(array('errors' => $validator->getMessageBag()->toArray()));
         } else {
 
-            $health_insurance_company = Clinic::findOrFail($id);
+            $health_insurance_company = HealthInsuranceCompany::findOrFail($id);
 
             if(!$health_insurance_company) {
                 return response()->json([
@@ -157,7 +158,7 @@ class HealthInsuranceCompanyController extends Controller
     {
         //
         
-        $health_insurance_company = Clinic::findOrFail($id);
+        $health_insurance_company = HealthInsuranceCompany::findOrFail($id);
 
         if(!$health_insurance_company) {
             return response()->json([

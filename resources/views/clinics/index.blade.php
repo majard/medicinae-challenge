@@ -25,7 +25,7 @@
                             <tr>
                                 <!-- Clinic Name -->
                                     <td class="table-text">
-                                        <a href="{{ route('show-clinic', [$clinic->id]) }}">
+                                        <a href="{{ route('show_clinic', [$clinic->id]) }}">
                                             <div>{{ $clinic->nome }}</div>
                                         </a>
                                     </td>
