@@ -44,6 +44,44 @@
     </div>
 
     
+    <!-- Current Health Insurance Companies Accepted -->
+    @if ((count($clinic->health_insurance_companies) > 0) && (($clinic->user_id == Auth::user()->id)))
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Planos de saúde aceitos:
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped clinic-table">
+
+                    <!-- Table Headings -->
+                    <thead>
+                        <th class="text-center"> Plano de saude</th>
+                        <th>&nbsp;</th>
+                    </thead>
+
+                    <!-- Table Body -->
+                    <tbody>
+                        @foreach ($clinic->health_insurance_companies as $health_insurance_company)
+                        <tr>
+                            <td class="table-text">
+                                <div> <img src="{{ Storage::url($health_insurance_company->logo) }}"> </div>
+                            </td>
+                            <!-- Health Insurance Company Name -->
+                            <td class="table-text">
+                                <a href="{{ route('show_health_insurance_company', [$health_insurance_company->id]) }}">
+                                    <div>{{ $health_insurance_company->nome }}</div>
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+    
     <!-- Modal form to edit a form -->
     <div id="editModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
