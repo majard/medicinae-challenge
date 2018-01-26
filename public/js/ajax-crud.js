@@ -162,15 +162,36 @@ $(document).ready(function() {
             contentType: false,
 
             data: new FormData($("#upload_form")[0]),
+
             
-            success: function(data) {
 
-                if($.isEmptyObject(data.error)){         
-                    console.log(data);
-                    toastr.success('O plano de saúde foi cadastrado com sucesso!', 'Sucesso!', {timeOut: 5000});
+            success: function(data) {                  
+                $('.errorNome').addClass('hidden');
+                $('.errorImage').addClass('hidden');
 
-                }else{                    
-                    toastr.error('Erro de Validação!', 'Erro!', {timeOut: 5000});
+                toastr.success('O plano de saúde foi cadastrado com sucesso!', 'Sucesso!', {timeOut: 5000});
+            },
+            
+            error: function(data){
+
+                console.log(data);
+                
+                toastr.error('Erro de Validação!', 'Erro!', {timeOut: 5000});
+
+                var errors = data.responseJSON.errors;
+                
+                // Render the errors with js ...
+                if (errors.nome) {
+                    $('.errorNome').removeClass('hidden');
+                    $('.errorNome').text(errors.nome);
+                }
+                if (errors.image) {
+                    $('.errorImage').removeClass('hidden');
+                    $('.errorImage').text(errors.image);
+                }
+                if (errors.status) {
+                    $('.errorStatus').removeClass('hidden');
+                    $('.errorStatus').text(errors.status);
                 }
             }
         });
@@ -208,28 +229,43 @@ $(document).ready(function() {
 
             data: formData,
             
-            success: function(data) {
+            
+            success: function(data) {                     
+                $('.errorNome').addClass('hidden');
+                $('.errorImage').addClass('hidden');
+                $('#editModal').modal('hide');
 
                 console.log(data);
-                $('.errorTitle').addClass('hidden');
-                $('.errorContent').addClass('hidden');
 
-                if ((data.errors)) {
-                    setTimeout(function () {
-                        $('#editModal').modal('show');
-                        toastr.error('Erro de Validação!', 'Erro!', {timeOut: 5000});
-                    }, 500);
+                toastr.success('A edição foi feita com sucesso!', 'Successo!', {timeOut: 5000});                    
+            },
+            
+            error: function(data){
 
-                    if (data.errors.title) {
-                        $('.errorTitle').removeClass('hidden');
-                        $('.errorTitle').text(data.errors.title);
+                var errors = data.responseJSON.errors;
+
+                if (errors){
+                    // Render the errors with js ...
+                    
+                    toastr.error('Erro de Validação!', 'Erro!', {timeOut: 5000});
+
+                    
+                    if (errors.nome) {
+                        $('.errorNome').removeClass('hidden');
+                        $('.errorNome').text(errors.nome);
                     }
-                    if (data.errors.content) {
-                        $('.errorContent').removeClass('hidden');
-                        $('.errorContent').text(data.errors.content);
+                    if (errors.image) {
+                        $('.errorImage').removeClass('hidden');
+                        $('.errorImage').text(errors.image);
                     }
-                } else {
-                    toastr.success('A edição foi feita com sucesso!', 'Sucesso!', {timeOut: 5000});                    
+                    if (errors.status) {
+                        $('.errorStatus').removeClass('hidden');
+                        $('.errorStatus').text(errors.status);
+                    }
+                } 
+                else 
+                {
+                    toastr.error('Erro desconhecido.', 'Erro!', {timeOut: 5000});
                 }
             }
         });

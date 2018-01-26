@@ -5,8 +5,6 @@
     <!-- Bootstrap Boilerplate... -->
 
     <div class="panel-body">
-        <!-- Display Validation Errors -->
-        @include('common.errors')
 
         <!-- New health_insurance_company Form -->
         <form enctype="multipart/form-data" id="upload_form" action="" class="form-horizontal">
@@ -20,6 +18,7 @@
 
                     <div class="col-sm-6">
                         <input type="text" name="nome" id="health_insurance_company-name" class="form-control">
+                        <p class="errorNome text-center alert alert-danger hidden"></p>
                     </div>
                 </div>
                 <div class="row">
@@ -27,6 +26,15 @@
 
                     <div class="col-sm-6">
                         <input type="file" name="image" class="form-control">
+                        <p class="errorImage text-center alert alert-danger hidden"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="" class="col-sm-3 control-label">Ativo</label>
+
+                    <div class="col-sm-6">
+                        <input type="checkbox" name="status" class="form-control">
+                        <p class="errorStatus text-center alert alert-danger hidden"></p>
                     </div>
 
                 </div>

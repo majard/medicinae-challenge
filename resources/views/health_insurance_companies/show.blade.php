@@ -11,25 +11,26 @@
             <!-- Table Body -->
             <tbody>
                 <tr>
-                    <td>
-                        Nome da Clínica
-                    </td>
-                    <td>
-                        CNPJ
-                    </td>
-                    <td>
-                    </td>
+                    <td> Logo </td>
+                    <td> Nome da Clínica</td>
+                    <td> Status </td>
                 </tr>
-                <tr>
-                    <!-- Health Insurance Company Name -->
-                    <td class="table-text">
-                        <div>{{ $health_insurance_company->nome }}</div>
-                    </td>
-                    <td class="table-text">
-                        <div>{{ $health_insurance_company->status }}</div>
-                    </td>                            
+
+                <tr>                     
                     <td class="table-text">
                         <div> <img src="{{ $logo_url }}"> </div>
+                    </td>
+                    <td class="table-text">
+                        <div>{{$health_insurance_company->nome }}</div>
+                    </td>
+                    <td class="table-text">
+                        <div>   
+                            @if ($health_insurance_company->status)
+                                Ativo
+                            @else
+                                Inativo
+                            @endif
+                        </div>
                     </td>                            
                     
                     <td>                        
@@ -64,6 +65,7 @@
                             <label class="control-label col-sm-2" for="nome">Nome do Plano de Saúde:</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="nome" id="nome_edit">
+                                <p class="errorNome text-center alert alert-danger hidden"></p>
                             </div>
                         </div>                        
                         <div class="form-group">
@@ -73,19 +75,19 @@
                             <label class="control-label col-sm-2" for="logo">Logo:</label>
                             <div class="col-sm-10">
                                 <input type="file" class="form-control" name="image" id="logo_edit" autofocus>
-                                <p class="errorTitle text-center alert alert-danger hidden"></p>
+                                <p class="errorImage text-center alert alert-danger hidden"></p>
                             </div>
                         </div>               
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="status">Status:</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="status" id="status_edit" autofocus>
-                                <p class="errorTitle text-center alert alert-danger hidden"></p>
+                                <input type="checkbox" class="form-control" name="status" id="status_edit" autofocus>
+                                <p class="errorStatus text-center alert alert-danger hidden"></p>
                             </div>
                         </div>
                     </form>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary health_insurance edit" data-dismiss="modal">
+                        <button type="button" class="btn btn-primary health_insurance edit">
                             <span class='glyphicon glyphicon-check'></span> Edit
                         </button>
                         <button type="button" class="btn btn-warning" data-dismiss="modal">

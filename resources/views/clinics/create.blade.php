@@ -5,8 +5,6 @@
     <!-- Bootstrap Boilerplate... -->
 
     <div class="panel-body">
-        <!-- Display Validation Errors -->
-        @include('common.errors')
 
         <!-- New Clinic Form -->
         <form class="form-horizontal">
