@@ -1,8 +1,5 @@
 <?php
 
-
-use App\Clinic;
-use App\HealthInsuranceCompany;
 use Illuminate\Http\Request;
 
 /*
@@ -17,10 +14,8 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', function () {
-    return view('welcome');  
-    
-   
-});
+    return view('home');  
+})->name('home');
 
 Route::get('/clinicas', 'ClinicsController@index')->name('clinics');
 

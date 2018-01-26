@@ -24,14 +24,27 @@ $(document).ready(function() {
 
             data: {cnpj:cnpj, nome:nome},
 
-            success: function(data) {
+            success: function(data) {                  
+                $('.errorNome').addClass('hidden');
+                $('.errorCnpj').addClass('hidden');
 
-                if($.isEmptyObject(data.error)){         
+                toastr.success('A clínica foi cadastrada com sucesso!', 'Sucesso!', {timeOut: 5000});
+            },
+            
+            error: function(data){
+                
+                toastr.error('Erro de Validação!', 'Erro!', {timeOut: 5000});
 
-                    toastr.success('A clínica foi cadastrada com sucesso!', 'Success Alert', {timeOut: 5000});
-
-                }else{                            
-                    toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
+                var errors = data.responseJSON.errors;
+                
+                // Render the errors with js ...
+                if (errors.nome) {
+                    $('.errorNome').removeClass('hidden');
+                    $('.errorNome').text(errors.nome);
+                }
+                if (errors.cnpj) {
+                    $('.errorCnpj').removeClass('hidden');
+                    $('.errorCnpj').text(errors.cnpj);
                 }
             }
         });
@@ -63,26 +76,39 @@ $(document).ready(function() {
                 'nome': $('#nome_edit').val(),
                 'cnpj': $('#cnpj_edit').val()
             },
-            success: function(data) {
-                $('.errorTitle').addClass('hidden');
-                $('.errorContent').addClass('hidden');
 
-                if ((data.errors)) {
-                    setTimeout(function () {
-                        $('#editModal').modal('show');
-                        toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
-                    }, 500);
+            success: function(data) {                
+                $('.errorNome').addClass('hidden');
+                $('.errorCnpj').addClass('hidden');
+                $('#editModal').modal('hide');
 
-                    if (data.errors.title) {
-                        $('.errorTitle').removeClass('hidden');
-                        $('.errorTitle').text(data.errors.title);
+                toastr.success('A edição foi feita com sucesso!', 'Successo!', {timeOut: 5000});                    
+            },
+            
+            error: function(data){
+
+                var errors = data.responseJSON.errors;
+
+                if (errors){
+                    // Render the errors with js ...
+                    
+                    toastr.error('Erro de Validação!', 'Erro!', {timeOut: 5000});
+
+                    if (errors.nome) {
+                        $('.errorNome').removeClass('hidden');
+                        $('.errorNome').text(errors.nome);
                     }
-                    if (data.errors.content) {
-                        $('.errorContent').removeClass('hidden');
-                        $('.errorContent').text(data.errors.content);
+                    if (errors.cnpj) {
+                        $('.errorCnpj').removeClass('hidden');
+                        $('.errorCnpj').text(errors.cnpj);
                     }
-                } else {
-                    toastr.success('A edição foi feita com sucesso!', 'Success Alert', {timeOut: 5000});                    
+                } 
+                else if (data.status == 403){
+                    toastr.error('Você não pode editar essa clinica!', 'Erro!', {timeOut: 5000});
+                }
+                else 
+                {
+                    toastr.error('Erro desconhecido.', 'Erro!', {timeOut: 5000});
                 }
             }
         });
@@ -108,7 +134,7 @@ $(document).ready(function() {
             url: '/clinicas/' + id,
 
             success: function(data) {
-                toastr.success('A clinica foi deletada com sucesso!', 'Success Alert', {timeOut: 5000});
+                toastr.success('A clinica foi deletada com sucesso!', 'Sucesso!', {timeOut: 5000});
             }
         });
     });
@@ -141,10 +167,10 @@ $(document).ready(function() {
 
                 if($.isEmptyObject(data.error)){         
                     console.log(data);
-                    toastr.success('O plano de saúde foi cadastrado com sucesso!', 'Success Alert', {timeOut: 5000});
+                    toastr.success('O plano de saúde foi cadastrado com sucesso!', 'Sucesso!', {timeOut: 5000});
 
                 }else{                    
-                    toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
+                    toastr.error('Erro de Validação!', 'Erro!', {timeOut: 5000});
                 }
             }
         });
@@ -191,7 +217,7 @@ $(document).ready(function() {
                 if ((data.errors)) {
                     setTimeout(function () {
                         $('#editModal').modal('show');
-                        toastr.error('Validation error!', 'Error Alert', {timeOut: 5000});
+                        toastr.error('Erro de Validação!', 'Erro!', {timeOut: 5000});
                     }, 500);
 
                     if (data.errors.title) {
@@ -203,7 +229,7 @@ $(document).ready(function() {
                         $('.errorContent').text(data.errors.content);
                     }
                 } else {
-                    toastr.success('A edição foi feita com sucesso!', 'Success Alert', {timeOut: 5000});                    
+                    toastr.success('A edição foi feita com sucesso!', 'Sucesso!', {timeOut: 5000});                    
                 }
             }
         });
@@ -229,7 +255,7 @@ $(document).ready(function() {
             url: '/planos-de-saude/' + id,
 
             success: function(data) {
-                toastr.success('O plano de saúde foi deletada com sucesso!', 'Success Alert', {timeOut: 5000});
+                toastr.success('O plano de saúde foi deletada com sucesso!', 'Sucesso!', {timeOut: 5000});
             }
         });
     });

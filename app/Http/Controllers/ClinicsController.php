@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreClinic;
+
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Response;
-use Validator;
 
 use App\Clinic;
 
@@ -16,11 +17,6 @@ class ClinicsController extends Controller
     public function __construct() {
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }
-
-    protected $rules =
-    [
-        'nome' => 'required',
-    ];
 
     /**
      * Display a listing of the resource.
@@ -52,25 +48,18 @@ class ClinicsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\StoreClinic  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {        
-        $validator = Validator::make(Input::all(), $this->rules);
-        if ($validator->fails()) {
-            return Response::json(array('errors' => $validator->getMessageBag()->toArray()));
-        } else {
+    public function store(StoreClinic $request)
+    {           
+        $clinic = new Clinic;
+        $clinic->nome = $request->nome;
+        $clinic->cnpj = $request->cnpj;
+        $clinic->user_id =  Auth::user()->id;
+        $clinic->save();
 
-            $clinic = new Clinic;
-            $clinic->nome = $request->nome;
-            $clinic->cnpj = $request->cnpj;
-            $clinic->user_id =  Auth::user()->id;
-            $clinic->save();
-
-            return response()->json($clinic, 201);
-        }
-        //
+        return response()->json($clinic, 201);
     }
 
     /**
@@ -108,33 +97,35 @@ class ClinicsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\StoreClinic  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreClinic $request, $id)
     {
-        //
-        $validator = Validator::make(Input::all(), $this->rules);
 
-        if ($validator->fails()) {
-            return Response::json(array('errors' => $validator->getMessageBag()->toArray()));
-        } else {
+        $clinic = Clinic::findOrFail($id);
 
-            $clinic = Clinic::findOrFail($id);
+        if(!$clinic) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
 
-            if(!$clinic) {
-                return response()->json([
-                    'message'   => 'Record not found',
-                ], 404);
-            }
-
+        
+        if ($clinic->user_id == Auth::user()->id) {            
+            
             $clinic->nome = $request->nome;
             $clinic->cnpj = $request->cnpj;
             $clinic->user_id =  Auth::user()->id;
             $clinic->save();
-
+    
             return response()->json($clinic, 201);
+        }
+        else {
+            return response()->json([
+                'message'   => 'User does not have authority to edit this clinic.',
+            ], 403);
         }
     }
 
@@ -156,8 +147,16 @@ class ClinicsController extends Controller
             ], 404);
         }
 
-        $clinic->delete();
 
-        return response()->json($clinic, 200);
+        if ($clinic->user_id == Auth::user()->id) {            
+
+            $clinic->delete();
+            return response()->json($clinic, 200);
+        }
+        else {
+            return response()->json([
+                'message'   => 'User does not have authority to delete this clinic.',
+            ], 403);
+        }
     }
 }

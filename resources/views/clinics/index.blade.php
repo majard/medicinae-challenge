@@ -4,7 +4,7 @@
     <!-- Create Clinics Form... -->
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
-            <a  href="{{ route('display_clinic_signup') }}"> Cadastrar uma nova clínica</a
+            <a class="font-weight-bold" href="{{ route('display_clinic_signup') }}"> Cadastrar uma nova clínica</a
         ></div>
     </div>
 
@@ -20,7 +20,7 @@
 
                     <!-- Table Headings -->
                     <thead>
-                        <th> Clínica</th>
+                        <th class="text-center"> Clínica</th>
                         <th>&nbsp;</th>
                     </thead>
 
@@ -29,11 +29,11 @@
                         @foreach ($clinics as $clinic)
                             <tr>
                                 <!-- Clinic Name -->
-                                    <td class="table-text">
-                                        <a href="{{ route('show_clinic', [$clinic->id]) }}">
-                                            <div>{{ $clinic->nome }}</div>
-                                        </a>
-                                    </td>
+                                <td class="table-text text-center">
+                                    <a href="{{ route('show_clinic', [$clinic->id]) }}">
+                                        <div>{{ $clinic->nome }}</div>
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
 

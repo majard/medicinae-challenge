@@ -33,7 +33,7 @@
                         <button type="button" class="btn btn-danger delete-modal" value="{{$clinic->id}}" data-dismiss="modal">
                             <span class='glyphicon glyphicon-trash'></span> Deletar
                         </button>      
-                        <button class="clinic edit-modal btn btn-edit" data-nome="{{$clinic->nome}}" data-cnpj="{{$clinic->cnpj}}" value="{{$clinic->id}}">
+                        <button class="clinic btn btn-edit edit-modal" data-nome="{{$clinic->nome}}" data-cnpj="{{$clinic->cnpj}}" value="{{$clinic->id}}">
                         <span class="glyphicon glyphicon-edit"></span> Editar
                         </button>
                  
@@ -58,18 +58,19 @@
                             <label class="control-label col-sm-2" for="nome">Nome da Clinica:</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="nome_edit">
+                                <p class="errorNome text-center alert alert-danger hidden"></p>
                             </div>
                         </div>                        
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="cnpj">CNPJ:</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="cnpj_edit" autofocus>
-                                <p class="errorTitle text-center alert alert-danger hidden"></p>
+                                <p class="errorCnpj text-center alert alert-danger hidden"></p>
                             </div>
                         </div>
                     </form>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary clinic edit" data-dismiss="modal">
+                        <button type="button" class="btn btn-primary clinic edit">
                             <span class='glyphicon glyphicon-check'></span> Edit
                         </button>
                         <button type="button" class="btn btn-warning" data-dismiss="modal">
