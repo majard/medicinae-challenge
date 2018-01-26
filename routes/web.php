@@ -29,7 +29,6 @@ Route::get('/cadastro/clinica', 'ClinicsController@create')->name('display_clini
 
 Route::post('/cadastro/clinica', 'ClinicsController@store')->name('clinic_signup');
 
-
 Route::get('/planos-de-saude', 'HealthInsuranceCompanyController@index')->name('health_insurance_companies');
 
 Route::get('/planos-de-saude/{id}', 'HealthInsuranceCompanyController@show')->name('show_health_insurance_company');
@@ -41,6 +40,10 @@ Route::delete('/planos-de-saude/{id}', 'HealthInsuranceCompanyController@destroy
 Route::get('/cadastro/plano-de-saude', 'HealthInsuranceCompanyController@create')->name('display_health_insurance_company_signup');
 
 Route::post('/cadastro/plano-de-saude', 'HealthInsuranceCompanyController@store')->name('health_insurance_company_signup');
+
+Route::post('/relacionamento/{clinic_id}/{health_insurance_company_id}', 'ClinicsController@attach')->name('attach_health_insurance');
+
+Route::delete('/relacionamento/{clinic_id}/{health_insurance_company_id}', 'ClinicsController@detach')->name('detach_health_insurance');
 
 Auth::routes();
 

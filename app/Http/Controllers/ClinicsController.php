@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Response;
 
 use App\Clinic;
+use App\HealthInsuranceCompany;
 
 class ClinicsController extends Controller
 {    
@@ -71,7 +72,8 @@ class ClinicsController extends Controller
     public function show($id)
     {
         //
-        
+        $hics = HealthInsuranceCompany::orderBy('nome', 'asc')->get();
+
         $clinic = Clinic::findOrFail($id);
         
         if(!$clinic) {
@@ -80,7 +82,7 @@ class ClinicsController extends Controller
             ], 404);
         }
 
-        return view('clinics.show', ['clinic' => $clinic]);
+        return view('clinics.show', ['clinic' => $clinic, 'hics' => $hics]);
     }
 
     /**
@@ -156,6 +158,72 @@ class ClinicsController extends Controller
         else {
             return response()->json([
                 'message'   => 'User does not have authority to delete this clinic.',
+            ], 403);
+        }
+    }
+
+
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function attach($clinic_id, $health_insurance_company_id)
+    {
+        //
+        
+        $clinic = Clinic::findOrFail($clinic_id);
+        $health_insurance_company = HealthInsuranceCompany::findOrFail($health_insurance_company_id);
+
+        if(!$clinic || !$health_insurance_company) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
+
+
+        if ($clinic->user_id == Auth::user()->id) {
+            $clinic->health_insurance_companies()->attach($health_insurance_company_id);
+            return response()->json($clinic, 200);
+            
+        }
+        else {
+            return response()->json([
+                'message'   => 'User does not have authority to delete this relationshionship.',
+            ], 403);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function detach($clinic_id, $health_insurance_company_id)
+    {
+        //
+        
+        $clinic = Clinic::findOrFail($clinic_id);
+        $health_insurance_company = HealthInsuranceCompany::findOrFail($health_insurance_company_id);
+
+        if(!$clinic || !$health_insurance_company) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
+
+
+        if ($clinic->user_id == Auth::user()->id) {            
+
+            $clinic->health_insurance_companies()->detach($health_insurance_company_id);
+            return response()->json($clinic, 200);
+        }
+        else {
+            return response()->json([
+                'message'   => 'User does not have authority to delete this relationshionship.',
             ], 403);
         }
     }

@@ -116,7 +116,7 @@ $(document).ready(function() {
 
 
     // delete a clinic
-    $(document).on('click', '.delete-modal', function() {
+    $(document).on('click', '.clinic.delete-modal', function() {
         $('.modal-title').text('Delete');
         $('#deleteModal').modal('show');
         id = $(this).val();
@@ -278,7 +278,6 @@ $(document).ready(function() {
         id = $(this).val();
     });
     $('.modal-footer').on('click', '.health_insurance.delete', function() {
-        console.log("gonna delete");
                 
         $.ajaxSetup({
             headers: {
@@ -292,6 +291,77 @@ $(document).ready(function() {
 
             success: function(data) {
                 toastr.success('O plano de saúde foi deletada com sucesso!', 'Sucesso!', {timeOut: 5000});
+            }
+        });
+    });
+
+
+
+    
+    // add a relationship
+    $(document).on('click', '.relationship.add-modal', function() {
+        $('.modal-title').text('Adicionar plano de saúde');
+        $('#addRelationshipModal').modal('show');
+        clinic_id = $(this).val();
+    });
+    $(document).on('click', '.relationship.add', function() {
+        console.log("click");
+        
+        health_insurance_company_id = $(this).val();
+                
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
+
+        $.ajax({
+            type: 'POST',
+            url: '/relacionamento/' + clinic_id + '/' + health_insurance_company_id,
+
+            success: function(data) {
+                toastr.success('O relacionamento foi adicionado com sucesso!', 'Sucesso!', {timeOut: 5000});
+            },
+            error: function(data) {
+                if (data.status == 403){
+                    toastr.error('Você não pode editar essa clinica!', 'Erro!', {timeOut: 5000});
+                }
+                else {
+                    toastr.error('Erro desconhecido.', 'Erro!', {timeOut: 5000});
+                }
+            }
+        });
+    });
+    
+    // delete a relationship
+    $(document).on('click', '.relationship.delete-modal', function() {
+        $('.modal-title').text('Delete');
+        $('#deleteRelationshipModal').modal('show');
+        health_insurance_company_id = $(this).val();
+        clinic_id = $('#deleteClinic').val();
+    });
+    $('.modal-footer').on('click', '.relationship.delete', function() {
+                
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        })
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/relacionamento/' + clinic_id + '/' + health_insurance_company_id,
+
+            success: function(data) {
+                toastr.success('O relacionamento foi deletada com sucesso!', 'Sucesso!', {timeOut: 5000});
+            },            
+            error: function(data) {
+                if (data.status == 403){
+                    toastr.error('Você não pode editar essa clinica!', 'Erro!', {timeOut: 5000});
+                }
+                else {
+                    toastr.error('Erro desconhecido.', 'Erro!', {timeOut: 5000});
+                }
             }
         });
     });
