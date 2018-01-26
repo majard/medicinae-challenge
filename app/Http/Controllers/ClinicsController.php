@@ -182,11 +182,16 @@ class ClinicsController extends Controller
                 'message'   => 'Record not found',
             ], 404);
         }
-
+        
+        if(!$health_insurance_company->status) {
+            return response()->json([
+                'message'   => 'Health Insurance Company is not active!',
+            ], 409);
+        }
 
         if ($clinic->user_id == Auth::user()->id) {
             $clinic->health_insurance_companies()->attach($health_insurance_company_id);
-            return response()->json($clinic, 200);
+            return response()->json($clinic, 201);
             
         }
         else {
