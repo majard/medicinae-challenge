@@ -30,23 +30,11 @@ class HealthInsuranceCompaniesControllerApi extends Controller
     {
         $health_insurance_companies = HealthInsuranceCompany::orderBy('nome', 'asc')->get();
     
-        return view('health_insurance_companies.index', [
-            'health_insurance_companies' => $health_insurance_companies
-        ]);
+        return response()->json($health_insurance_companies, 200);
+
         //
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('health_insurance_companies.create');
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -59,13 +47,7 @@ class HealthInsuranceCompaniesControllerApi extends Controller
         $health_insurance_company = new HealthInsuranceCompany;
         $health_insurance_company->nome = $request->nome;
 
-        if ($request->has('status')) {
-            $status = true;
-        }
-        else {
-            $status = false;
-        }
-        $health_insurance_company->status = $status;            
+        $health_insurance_company->status = $request->status;            
 
         $image = $request->file('image');
         $imageFileName = time() . '.' . $image->getClientOriginalExtension();
@@ -97,21 +79,8 @@ class HealthInsuranceCompaniesControllerApi extends Controller
                 'message'   => 'Record not found',
             ], 404);
         }
-        
-        $url = Storage::url($health_insurance_company->logo);
 
-        return view('health_insurance_companies.show', ['logo_url' => $url, 'health_insurance_company' => $health_insurance_company]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->json($health_insurance_company, 201);
     }
 
     /**
@@ -132,15 +101,8 @@ class HealthInsuranceCompaniesControllerApi extends Controller
         }
 
         $health_insurance_company->nome = $request->nome;
-        
-        if ($request->has('status')) {
-            $status = true;
-        }
-        else {
-            $status = false;
-        }
 
-        $health_insurance_company->status = $status;            
+        $health_insurance_company->status = $request->status;            
 
         $path = $health_insurance_company->logo;
 

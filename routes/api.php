@@ -26,5 +26,6 @@ Route::get('/', function () {
 Route::resource('clinics', 'ClinicsControllerApi');
 Route::resource('health_insurance_companies', 'HealthInsuranceCompaniesControllerApi');
 
-Route::post('register', 'Auth\RegisterController@register');
-Route::post('login', 'Auth\LoginController@login');
+Route::post('register', 'Auth\RegisterController@registerApi');
+Route::post('login', 'Auth\LoginController@loginApi');
+Route::post('logout', 'Auth\LoginController@logoutApi');

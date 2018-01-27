@@ -42,7 +42,7 @@ class ClinicsControllerApi extends Controller
         $clinic = new Clinic;
         $clinic->nome = $request->nome;
         $clinic->cnpj = $request->cnpj;
-        $clinic->user_id =  Auth::guard('api')->id();;
+        $clinic->user_id =  Auth::guard('api')->id();
         $clinic->save();
 
         return response()->json($clinic, 201);

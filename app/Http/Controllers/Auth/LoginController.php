@@ -41,7 +41,7 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function login(Request $request)
+    public function loginApi(Request $request)
     {
         $this->validateLogin($request);
 
@@ -57,7 +57,7 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-    public function logout(Request $request)
+    public function logoutApi(Request $request)
     {
         $user = Auth::guard('api')->user();
 
