@@ -53,7 +53,13 @@ class ClinicsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreClinic $request)
-    {           
+    {  
+        if(Clinic::where('cnpj', '=', Input::get('cnpj'))->exists()) {
+            return response()->json([
+                'message'   => 'This cnpj already exists in the database.',
+            ], 409);
+        }         
+
         $clinic = new Clinic;
         $clinic->nome = $request->nome;
         $clinic->cnpj = $request->cnpj;
@@ -105,6 +111,11 @@ class ClinicsController extends Controller
      */
     public function update(StoreClinic $request, $id)
     {
+        if(Clinic::where('cnpj', '=', Input::get('cnpj'))->exists()) {
+            return response()->json([
+                'message'   => 'This cnpj already exists in the database.',
+            ], 409);
+        }
 
         $clinic = Clinic::findOrFail($id);
 
