@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use App\User;
 
 /*
@@ -17,7 +16,6 @@ $factory->define(App\Clinic::class, function (Faker\Generator $faker) {
     $faker->addProvider(new Faker\Provider\pt_BR\Company($faker));
 
     $user = User::inRandomOrder()->first();
-    Auth::login($user);
 
     return [
         'nome' => $faker->company,

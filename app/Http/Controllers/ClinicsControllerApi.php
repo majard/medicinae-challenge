@@ -95,7 +95,7 @@ class ClinicsControllerApi extends Controller
             $clinic->user_id =  Auth::user()->id;
             $clinic->save();
     
-            return response()->json($clinic, 201);
+            return response()->json($clinic, 200);
         }
         else {
             return response()->json([
@@ -126,7 +126,7 @@ class ClinicsControllerApi extends Controller
         if ($clinic->user_id == Auth::user()->id) {            
 
             $clinic->delete();
-            return response()->json($clinic, 200);
+            return response()->json($clinic, 204);
         }
         else {
             return response()->json([
@@ -201,7 +201,7 @@ class ClinicsControllerApi extends Controller
         }
         else {
             return response()->json([
-                'message'   => 'User does not have authority to delete this relationshionship.',
+                'message'   => 'User does not have authority to delete this relationship.',
             ], 403);
         }
     }

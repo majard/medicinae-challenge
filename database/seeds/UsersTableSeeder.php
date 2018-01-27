@@ -9,7 +9,7 @@ class UsersTableSeeder extends Seeder
 {
     public function run()
     {
-        // Let's clear the users table first
+        // Let's clear the users table first       
         DB::statement('TRUNCATE users CASCADE');
 
         $faker = \Faker\Factory::create();

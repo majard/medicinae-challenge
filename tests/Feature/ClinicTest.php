@@ -16,9 +16,7 @@ class ClinicTest extends TestCase
     public function testsClinicsAreCreatedCorrectly()
     {
 
-        $user = factory(User::class)->create();
-
-        Auth::login($user);
+        $user = Auth::user();
 
         $token = $user->generateToken();
 
@@ -36,16 +34,13 @@ class ClinicTest extends TestCase
 
     public function testsClinicsAreUpdatedCorrectly()
     {
-        
-        $user = Auth::user();
+        $clinic = Clinic::inRandomOrder()->first();
+
+        $user = Auth::loginUsingId($clinic->user_id);
 
         $token = $user->generateToken();
         
         $headers = ['Authorization' => "Bearer $token"];
-        $clinic = factory(Clinic::class)->create([
-            'nome' => 'First Clinic',
-            'cnpj' => '1234567',
-        ]);
 
         $payload = [
             'nome' => 'Lorem',
@@ -63,31 +58,25 @@ class ClinicTest extends TestCase
 
     public function testsClinicsAreDeletedCorrectly()
     {
-        $user = factory(User::class)->create();
+        $clinic = Clinic::inRandomOrder()->first();
 
-        Auth::login($user);
+        $user = Auth::loginUsingId($clinic->user_id);
+
         $token = $user->generateToken();
 
         $headers = ['Authorization' => "Bearer $token"];
-
-        $clinic = factory(Clinic::class)->create([
-            'nome' => 'First Clinic',
-            'cnpj' => '5489498',
-        ]);
 
         $this->json('DELETE', '/api/clinics/' . $clinic->id, [], $headers)
             ->assertStatus(204);
     }
     
     public function testClinicsAreListedCorrectly()
-    {
-
-     
-        $user = factory(User::class)->create();
-
-        Auth::login($user);
+    {     
+        $user = Auth::user();
         $token = $user->generateToken();
         
+        DB::statement('TRUNCATE clinics CASCADE');
+
         factory(Clinic::class)->create([
             'nome' => 'First Clinic',
             'cnpj' => '988965'
