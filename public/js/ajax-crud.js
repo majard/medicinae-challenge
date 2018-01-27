@@ -28,12 +28,15 @@ $(document).ready(function() {
                 $('.errorNome').addClass('hidden');
                 $('.errorCnpj').addClass('hidden');
 
-                toastr.success('A clínica foi cadastrada com sucesso!', 'Sucesso!', {timeOut: 5000});
+                toastr.success('A clínica foi cadastrada com sucesso!', 'Sucesso!', {timeOut: 2000});
+                setTimeout(function(){
+                    location.href='/clinicas';
+                }, 2500);
             },
             
             error: function(data){
                 
-                toastr.error('Erro de Validação!', 'Erro!', {timeOut: 5000});
+                toastr.error('Erro de Validação!', 'Erro!', {timeOut: 4000});
 
                 var errors = data.responseJSON.errors;
                 
@@ -134,12 +137,13 @@ $(document).ready(function() {
             url: '/clinicas/' + id,
 
             success: function(data) {
-                toastr.success('A clinica foi deletada com sucesso!', 'Sucesso!', {timeOut: 5000});
+                toastr.success('A clinica foi deletada com sucesso!', 'Sucesso!', {timeOut: 2000});
+                setTimeout(function(){
+                    location.href='/clinicas';
+                }, 2500);
             }
         });
     });
-
-    
 
 
 
@@ -163,13 +167,14 @@ $(document).ready(function() {
 
             data: new FormData($("#upload_form")[0]),
 
-            
-
             success: function(data) {                  
                 $('.errorNome').addClass('hidden');
                 $('.errorImage').addClass('hidden');
 
-                toastr.success('O plano de saúde foi cadastrado com sucesso!', 'Sucesso!', {timeOut: 5000});
+                toastr.success('O plano de saúde foi cadastrado com sucesso!', 'Sucesso!', {timeOut: 2000});
+                setTimeout(function(){
+                    location.href='/planos-de-saude';
+                }, 2500);
             },
             
             error: function(data){
@@ -208,6 +213,7 @@ $(document).ready(function() {
         id = $(this).val();
         $('#editModal').modal('show');
     });
+
     $('.modal-footer').on('click', '.health_insurance.edit', function() {
 
         $.ajaxSetup({
@@ -277,6 +283,7 @@ $(document).ready(function() {
         $('#deleteModal').modal('show');
         id = $(this).val();
     });
+
     $('.modal-footer').on('click', '.health_insurance.delete', function() {
                 
         $.ajaxSetup({
@@ -290,7 +297,10 @@ $(document).ready(function() {
             url: '/planos-de-saude/' + id,
 
             success: function(data) {
-                toastr.success('O plano de saúde foi deletada com sucesso!', 'Sucesso!', {timeOut: 5000});
+                toastr.success('O plano de saúde foi deletada com sucesso!', 'Sucesso!', {timeOut: 2000});
+                setTimeout(function(){
+                    location.href='/planos-de-saude';
+                }, 2500);
             }
         });
     });
@@ -304,6 +314,7 @@ $(document).ready(function() {
         $('#addRelationshipModal').modal('show');
         clinic_id = $(this).val();
     });
+
     $(document).on('click', '.relationship.add', function() {
         console.log("click");
         

@@ -14,8 +14,9 @@ use Response;
 
 use App\HealthInsuranceCompany;
 
-class HealthInsuranceCompanyController extends Controller
+class HealthInsuranceCompaniesControllerApi extends Controller
 {
+    //
     public function __construct() {
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }

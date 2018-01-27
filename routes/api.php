@@ -16,3 +16,15 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+Route::get('/', function () {
+    return response()->json(['message' => 'Medicinae API', 'status' => 'Connected']);;
+});
+
+Route::resource('clinics', 'ClinicsControllerApi');
+Route::resource('health_insurance_companies', 'HealthInsuranceCompaniesControllerApi');
+
+Route::post('register', 'Auth\RegisterController@register');
+Route::post('login', 'Auth\LoginController@login');
