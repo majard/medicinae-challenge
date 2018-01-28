@@ -150,9 +150,9 @@ class ClinicsControllerApi extends Controller
 
         if ($clinic->user_id == Auth::user()->id) {
             $clinic->health_insurance_companies()->attach($health_insurance_company_id);
-            return response()->json($clinic, 201);
-            
+            return response()->json($clinic, 201);            
         }
+        
         else {
             return response()->json([
                 'message'   => 'User does not have authority to delete this relationshionship.',
