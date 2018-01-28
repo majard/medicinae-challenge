@@ -28,7 +28,7 @@ class HealthInsuranceCompaniesControllerApi extends Controller
      */
     public function index()
     {
-        $health_insurance_companies = HealthInsuranceCompany::orderBy('nome', 'asc')->get();
+        $health_insurance_companies = HealthInsuranceCompany::orderBy('id', 'asc')->get();
     
         return response()->json($health_insurance_companies, 200);
 
@@ -71,14 +71,7 @@ class HealthInsuranceCompaniesControllerApi extends Controller
     public function show($id)
     {
         //
-        
         $health_insurance_company = HealthInsuranceCompany::findOrFail($id);
-        
-        if(!$health_insurance_company) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
 
         return response()->json($health_insurance_company, 201);
     }
@@ -94,12 +87,6 @@ class HealthInsuranceCompaniesControllerApi extends Controller
     {
         $health_insurance_company = HealthInsuranceCompany::findOrFail($id);
 
-        if(!$health_insurance_company) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
-
         $health_insurance_company->nome = $request->nome;
 
         $health_insurance_company->status = $request->status;            
@@ -111,15 +98,15 @@ class HealthInsuranceCompaniesControllerApi extends Controller
         }
 
         $image = $request->file('image');
-        $imageFileName = time() . '.' . $image->getClientOriginalExtension();
+        $imageFileName = 'logo'. $image->getClientOriginalExtension();
         $s3 = \Storage::disk('s3');
-        $filePath = '/logos/' . $imageFileName;
+        $filePath = '/logos/' . $health_insurance_company->id . '/' . $imageFileName;
         $s3->put($filePath, file_get_contents($image), 'public');
         $health_insurance_company->logo = $filePath; 
 
         $health_insurance_company->save();
 
-        return response()->json($health_insurance_company, 201);
+        return response()->json($health_insurance_company, 200);
     }
 
     /**
