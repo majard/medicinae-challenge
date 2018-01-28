@@ -28,5 +28,5 @@ Route::post('register', 'Auth\RegisterController@registerApi');
 Route::post('login', 'Auth\LoginController@loginApi');
 Route::post('logout', 'Auth\LoginController@logoutApi');
 
-Route::post('/attach/{clinic_id}/{health_insurance_company_id}', 'ClinicsControllerApi@attach')->name('attach_health_insurance');
-Route::delete('/detach/{clinic_id}/{health_insurance_company_id}', 'ClinicsControllerApi@detach')->name('detach_health_insurance');
+Route::post('/relationship/{clinic_id}/{health_insurance_company_id}', 'ClinicsControllerApi@attach')->name('attach_health_insurance');
+Route::delete('/relationship/{clinic_id}/{health_insurance_company_id}', 'ClinicsControllerApi@detach')->name('detach_health_insurance');

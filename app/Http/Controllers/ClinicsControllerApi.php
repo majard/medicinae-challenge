@@ -152,10 +152,10 @@ class ClinicsControllerApi extends Controller
             $clinic->health_insurance_companies()->attach($health_insurance_company_id);
             return response()->json($clinic, 201);            
         }
-        
+
         else {
             return response()->json([
-                'message'   => 'User does not have authority to delete this relationshionship.',
+                'message'   => 'User does not have authority to attach this relationshionship.',
             ], 403);
         }
     }
@@ -173,6 +173,12 @@ class ClinicsControllerApi extends Controller
         $clinic = Clinic::findOrFail($clinic_id);
         $health_insurance_company = HealthInsuranceCompany::findOrFail($health_insurance_company_id);
 
+        if (!$clinic->health_insurance_companies->where('id', $health_insurance_company->id)->first()) {
+            return response()->json([
+                'message'   => 'Relationship not found.',
+            ], 404);
+        }
+        
         if ($clinic->user_id == Auth::user()->id) {            
 
             $clinic->health_insurance_companies()->detach($health_insurance_company_id);

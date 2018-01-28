@@ -135,7 +135,7 @@ class ClinicTest extends TestCase
             ]);
     }
 
-    public function testsNotFoundClinicsUpdatesFails()
+    public function testsNotFoundClinicUpdateFails()
     {
 
         $clinic = Clinic::inRandomOrder()->first();
@@ -162,7 +162,6 @@ class ClinicTest extends TestCase
 
         $user = User::inRandomOrder()->where('id','!=', $clinic->user_id)->first();
         Auth::logout();
-
         Auth::login($user);
         $token = $user->generateToken();
         
@@ -217,6 +216,7 @@ class ClinicTest extends TestCase
         $clinic = Clinic::inRandomOrder()->first();
 
         $user = User::inRandomOrder()->where('id','!=', $clinic->user_id)->first();
+        Auth::login($user);
 
         $token = $user->generateToken();
 
@@ -227,11 +227,10 @@ class ClinicTest extends TestCase
             ->assertJSON(['message'   => 'User does not have authority to delete this clinic.',]);
     }
 
-
     public function testsRelationshipsAreAttachedCorrectly()
     {
         $clinic = Clinic::inRandomOrder()->first();
-        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', true)->first();
 
         $user = Auth::loginUsingId($clinic->user_id);
         $token = $user->generateToken();
@@ -241,8 +240,8 @@ class ClinicTest extends TestCase
         $payload = [];
         
 
-        $response = $this->json('PUT', 
-            '/api/relacionamento/' . $clinic->id . '/'
+        $response = $this->json('POST', 
+            '/api/relationship/' . $clinic->id . '/'
              . $health_insurance_company->id, 
             $payload, $headers)
             ->assertStatus(201)
@@ -253,5 +252,208 @@ class ClinicTest extends TestCase
             ]);
     }
 
+    public function testsInactiveCompaniesCantBeAttached()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', false)->first();
 
+        $user = Auth::loginUsingId($clinic->user_id);
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];
+        
+        $response = $this->json('POST', 
+            '/api/relationship/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(409)
+            ->assertJson(['message'   => 'Health Insurance Company is not active!']);
+    }
+
+    public function testsClinicNotFoundRelationshipCantBeAttached()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $clinic->delete();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', false)->first();
+
+        $user = Auth::loginUsingId($clinic->user_id);
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];
+        
+        $response = $this->json('POST', 
+            '/api/relationship/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(404)
+            ->assertJson([ 'message'   => 'No query results for model [App\Clinic] ' . $clinic->id]);
+    }
+
+    public function testsHealthInsuranceCompanyNotFoundRelationshipCantBeAttached()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', false)->first();
+        $health_insurance_company->delete();
+        $user = Auth::loginUsingId($clinic->user_id);
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];
+        
+        $response = $this->json('POST', 
+            '/api/relationship/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(404)
+            ->assertJson([ 'message'   => 'No query results for model [App\HealthInsuranceCompany] ' . $health_insurance_company->id]);
+    }
+
+    public function testsCantAttachRelationshipToDifferentUserClinic()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', true)->first();
+
+        $user = User::inRandomOrder()->where('id','!=', $clinic->user_id)->first();
+        Auth::logout();
+        Auth::login($user);
+
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];
+        
+        $response = $this->json('POST', 
+            '/api/relationship/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(403)
+            ->assertJson(['message'   => 'User does not have authority to attach this relationshionship.']);
+    }
+
+    public function testsRelationshipsAreDetachedCorrectly()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', true)->first();
+
+        $clinic->health_insurance_companies()->attach($health_insurance_company->id);
+
+        $user = Auth::loginUsingId($clinic->user_id);
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];
+        
+
+        $response = $this->json('DELETE', 
+            '/api/relationship/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(200)
+            ->assertJson([
+                'user_id' => $user->id, 
+                'nome' => $clinic->nome, 
+                'cnpj' => $clinic->cnpj
+            ]);
+    }
+    
+    public function testsCantDeleteNotFoundClinic()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', true)->first();
+
+        $clinic->health_insurance_companies()->attach($health_insurance_company->id);
+
+        $clinic->delete();
+
+        $user = Auth::loginUsingId($clinic->user_id);
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];        
+
+        $response = $this->json('DELETE', 
+            '/api/relationship/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(404)
+            ->assertJson([ 'message'   => 'No query results for model [App\Clinic] ' . $clinic->id]);
+    }
+
+    public function testsCantDeleteNotFoundHealthInsuranceCompany()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', true)->first();
+
+        $clinic->health_insurance_companies()->attach($health_insurance_company->id);
+
+        $health_insurance_company->delete();
+
+        $user = Auth::loginUsingId($clinic->user_id);
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];        
+
+        $response = $this->json('DELETE', 
+            '/api/relationship/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(404)
+            ->assertJson([ 'message'   => 'No query results for model [App\HealthInsuranceCompany] ' . $health_insurance_company->id]);
+    }
+
+    public function testsCantDeleteNonExistentRelationship()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', true)->first();
+
+        $user = Auth::loginUsingId($clinic->user_id);
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];
+        
+
+        $response = $this->json('DELETE', 
+            '/api/relationship/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(404)
+            ->assertJson(['message'   => 'Relationship not found.',]);
+    }
+
+    public function testsCantDeleteRelationshipDifferentUserClinic()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->where('status', true)->first();
+
+        $clinic->health_insurance_companies()->attach($health_insurance_company->id);
+        
+        $user = User::inRandomOrder()->where('id','!=', $clinic->user_id)->first();
+        Auth::logout();
+        Auth::login($user);
+
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];        
+
+        $response = $this->json('DELETE', 
+            '/api/relationship/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(403)
+            ->assertJson(['message'   => 'User does not have authority to delete this relationship.']);
+    }
 }
