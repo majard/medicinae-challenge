@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
-use App\Clinic;
+use App\HealthInsuranceCompany;
 
-class ClinicsTableSeeder extends Seeder
+class HealthInsuranceCompaniesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,11 +13,12 @@ class ClinicsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement('TRUNCATE clinics CASCADE');
+        DB::statement('TRUNCATE health_insurance_companies CASCADE');
 
         // And now, let's create a few articles in our database:
         for ($i = 0; $i < 16; $i++) {
-            factory(Clinic::class)->create();
+            factory(HealthInsuranceCompany::class)->create();
         }
+
     }
 }

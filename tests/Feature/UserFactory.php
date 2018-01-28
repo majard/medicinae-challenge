@@ -1,6 +1,6 @@
 <?php
 
-use App\User;
+use Faker\Generator as Faker;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,15 +12,12 @@ use App\User;
 | model instances for testing / seeding your application's database.
 |
 */
-$factory->define(App\Clinic::class, function (Faker\Generator $faker) {
-    
-    $faker->addProvider(new Faker\Provider\pt_BR\Company($faker));
 
-    $user = User::inRandomOrder()->first();
-
+$factory->define(App\User::class, function (Faker $faker) {
     return [
-        'nome' => $faker->company,
-        'cnpj' => $faker->unique()->cnpj(false),
-        'user_id' => $user->id,
+        'name' => $faker->name,
+        'email' => $faker->unique()->safeEmail,
+        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+        'remember_token' => str_random(10),
     ];
 });

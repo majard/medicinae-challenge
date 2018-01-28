@@ -118,13 +118,6 @@ class ClinicsController extends Controller
         }
 
         $clinic = Clinic::findOrFail($id);
-
-        if(!$clinic) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
-
         
         if ($clinic->user_id == Auth::user()->id) {            
             
@@ -187,12 +180,6 @@ class ClinicsController extends Controller
         
         $clinic = Clinic::findOrFail($clinic_id);
         $health_insurance_company = HealthInsuranceCompany::findOrFail($health_insurance_company_id);
-
-        if(!$clinic || !$health_insurance_company) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
         
         if(!$health_insurance_company->status) {
             return response()->json([

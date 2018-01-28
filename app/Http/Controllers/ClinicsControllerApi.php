@@ -65,12 +65,6 @@ class ClinicsControllerApi extends Controller
     {
         //
         $clinic = Clinic::with('health_insurance_companies')->findOrFail($id);
-        
-        if(!$clinic) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
 
         return response()->json($clinic, 200);
 
@@ -92,13 +86,6 @@ class ClinicsControllerApi extends Controller
         }
 
         $clinic = Clinic::findOrFail($id);
-
-        if(!$clinic) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
-
         
         if ($clinic->user_id == Auth::user()->id) {            
             
@@ -128,13 +115,6 @@ class ClinicsControllerApi extends Controller
         
         $clinic = Clinic::findOrFail($id);
 
-        if(!$clinic) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
-
-
         if ($clinic->user_id == Auth::user()->id) {            
 
             $clinic->delete();
@@ -162,12 +142,6 @@ class ClinicsControllerApi extends Controller
         $clinic = Clinic::findOrFail($clinic_id);
         $health_insurance_company = HealthInsuranceCompany::findOrFail($health_insurance_company_id);
 
-        if(!$clinic || !$health_insurance_company) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
-        
         if(!$health_insurance_company->status) {
             return response()->json([
                 'message'   => 'Health Insurance Company is not active!',
@@ -198,13 +172,6 @@ class ClinicsControllerApi extends Controller
         
         $clinic = Clinic::findOrFail($clinic_id);
         $health_insurance_company = HealthInsuranceCompany::findOrFail($health_insurance_company_id);
-
-        if(!$clinic || !$health_insurance_company) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
-
 
         if ($clinic->user_id == Auth::user()->id) {            
 

@@ -15,7 +15,8 @@ use Faker\Generator as Faker;
 
 $factory->define(App\HealthInsuranceCompany::class, function (Faker $faker) {
     return [
-        'name' => $faker->unique()->name,
+        'nome' => $faker->unique()->name,
         'status' => $faker->boolean,
+        'logo' => $faker->text,
     ];
 });

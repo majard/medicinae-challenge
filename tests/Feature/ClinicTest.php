@@ -8,7 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use App\Clinic;
+use App\HealthInsuranceCompany;
 use App\User;
+
+define('CNPJ_1', 66709354000118);
+define('CNPJ_2', 71391698000161);
 
 class ClinicTest extends TestCase
 {
@@ -21,12 +25,12 @@ class ClinicTest extends TestCase
 
         factory(Clinic::class)->create([
             'nome' => 'First Clinic',
-            'cnpj' => '988965'
+            'cnpj' => CNPJ_1
         ]);
 
         factory(Clinic::class)->create([
             'nome' => 'Second Clinic',
-            'cnpj' => '78984966'
+            'cnpj' => CNPJ_2
         ]);
 
         $headers = ['Authorization' => "Bearer $token"];
@@ -34,8 +38,8 @@ class ClinicTest extends TestCase
         $response = $this->json('GET', '/api/clinics', [], $headers)
             ->assertStatus(200)
             ->assertJson([
-                [ 'nome' => 'First Clinic', 'cnpj' => '988965' ],
-                [ 'nome' => 'Second Clinic', 'cnpj' => '78984966' ]
+                [ 'nome' => 'First Clinic', 'cnpj' => CNPJ_1],
+                [ 'nome' => 'Second Clinic', 'cnpj' => CNPJ_2]
             ])
             ->assertJsonStructure([
                 '*' => ['id', 'cnpj', 'nome', 'created_at', 'updated_at'],
@@ -51,17 +55,16 @@ class ClinicTest extends TestCase
         $headers = ['Authorization' => "Bearer $token"];
         $payload = [
             'nome' => 'Lorem',
-            'cnpj' => '123456',
+            'cnpj' => CNPJ_1,
         ];
 
         $this->json('POST', '/api/clinics', $payload, $headers)
             ->assertStatus(201)
-            ->assertJson(['user_id' => $user->id, 'nome' => 'Lorem', 'cnpj' => '123456']);
+            ->assertJson(['user_id' => $user->id, 'nome' => 'Lorem', 'cnpj' => CNPJ_1]);
     }
 
     public function testsClinicsCreationConflicts()
     {
-
         $user = Auth::user();
 
         $token = $user->generateToken();
@@ -79,7 +82,7 @@ class ClinicTest extends TestCase
             ->assertJson(['message' => 'This cnpj already exists in the database.' ]);
     }
 
-    public function testSingleClinicsIsListedCorrectly()
+    public function testSingleClinicIsListedCorrectly()
     {     
         $user = Auth::user();
         $token = $user->generateToken();
@@ -93,6 +96,22 @@ class ClinicTest extends TestCase
             ->assertJson([ 'nome' => $clinic->nome, 'cnpj' => $clinic->cnpj]);
     }    
 
+    public function testClinicNotFound()
+    {     
+        $user = Auth::user();
+        $token = $user->generateToken();
+
+        $clinic = Clinic::inRandomOrder()->first();
+
+        $clinic->delete();
+
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $response = $this->json('GET', '/api/clinics/' . $clinic->id, [], $headers)
+            ->assertStatus(404)
+            ->assertJson([ 'message'   => 'No query results for model [App\Clinic] ' . $clinic->id]);
+    }    
+
     public function testsClinicsAreUpdatedCorrectly()
     {
         $clinic = Clinic::inRandomOrder()->first();
@@ -104,7 +123,7 @@ class ClinicTest extends TestCase
 
         $payload = [
             'nome' => 'Lorem',
-            'cnpj' => '12345678',
+            'cnpj' => CNPJ_1,
         ];
 
         $response = $this->json('PUT', '/api/clinics/' . $clinic->id, $payload, $headers)
@@ -112,8 +131,29 @@ class ClinicTest extends TestCase
             ->assertJson([
                 'user_id' => $user->id, 
                 'nome' => 'Lorem', 
-                'cnpj' => '12345678' 
+                'cnpj' => CNPJ_1 
             ]);
+    }
+
+    public function testsNotFoundClinicsUpdatesFails()
+    {
+
+        $clinic = Clinic::inRandomOrder()->first();
+        $clinic->delete();
+
+        $user = Auth::loginUsingId($clinic->user_id);
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [
+            'nome' => 'Lorem',
+            'cnpj' => CNPJ_1,
+        ];
+
+        $response = $this->json('PUT', '/api/clinics/' . $clinic->id, $payload, $headers)
+            ->assertStatus(404)
+            ->assertJson([ 'message'   => 'No query results for model [App\Clinic] ' . $clinic->id]);
     }
 
     public function testsClinicsCantBeUpdatedByDifferentUser()
@@ -130,7 +170,7 @@ class ClinicTest extends TestCase
 
         $payload = [
             'nome' => 'Lorem',
-            'cnpj' => '12345678',
+            'cnpj' => CNPJ_1,
         ];
 
         $response = $this->json('PUT', '/api/clinics/' . $clinic->id, $payload, $headers)
@@ -171,4 +211,47 @@ class ClinicTest extends TestCase
         $this->json('DELETE', '/api/clinics/' . $clinic->id, [], $headers)
             ->assertStatus(204);
     }
+
+    public function testsClinicsCantBeDeletedByDifferentUser()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+
+        $user = User::inRandomOrder()->where('id','!=', $clinic->user_id)->first();
+
+        $token = $user->generateToken();
+
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $this->json('DELETE', '/api/clinics/' . $clinic->id, [], $headers)
+            ->assertStatus(403)
+            ->assertJSON(['message'   => 'User does not have authority to delete this clinic.',]);
+    }
+
+
+    public function testsRelationshipsAreAttachedCorrectly()
+    {
+        $clinic = Clinic::inRandomOrder()->first();
+        $health_insurance_company = HealthInsuranceCompany::inRandomOrder()->first();
+
+        $user = Auth::loginUsingId($clinic->user_id);
+        $token = $user->generateToken();
+        
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $payload = [];
+        
+
+        $response = $this->json('PUT', 
+            '/api/relacionamento/' . $clinic->id . '/'
+             . $health_insurance_company->id, 
+            $payload, $headers)
+            ->assertStatus(201)
+            ->assertJson([
+                'user_id' => $user->id, 
+                'nome' => $clinic->nome, 
+                'cnpj' => $clinic->cnpj
+            ]);
+    }
+
+
 }
