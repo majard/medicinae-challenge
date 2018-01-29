@@ -351,7 +351,6 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.relationship.add', function() {
-        console.log("click");
         
         health_insurance_company_id = $(this).val();
                 
@@ -370,6 +369,7 @@ $(document).ready(function() {
                 toastr.success('O relacionamento foi adicionado com sucesso!', 'Sucesso!', {timeOut: SUCCESS_MESSAGE_DURATION});
             },
             error: function(data) {
+                console.log(data);
                 if (data.status == 403){
                     toastr.error('Você não pode editar essa clinica!', 'Erro!', {timeOut: ERROR_MESSAGE_DURATION});
                 }

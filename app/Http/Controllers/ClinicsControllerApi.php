@@ -148,6 +148,17 @@ class ClinicsControllerApi extends Controller
             ], 409);
         }
 
+        $relationship_exists = $clinic->health_insurance_companies
+        ->where('id', $health_insurance_company->id)
+        ->first();
+
+        if($relationship_exists) {
+            return response()->json([
+                'relationship' => $relationship_exists,
+                'message'   => 'This relationship already exists in the database.',
+            ], 409);
+        }      
+
         if ($clinic->user_id == Auth::user()->id) {
             $clinic->health_insurance_companies()->attach($health_insurance_company_id);
             return response()->json($clinic, 201);            
