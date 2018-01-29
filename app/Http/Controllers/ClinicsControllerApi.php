@@ -78,15 +78,15 @@ class ClinicsControllerApi extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(StoreClinic $request, $id)
-    {
-        if(Clinic::where('cnpj', '=', Input::get('cnpj'))->exists()) {
+    {    
+        $clinic_with_same_cnpj = Clinic::where('cnpj', '=', Input::get('cnpj'))->first();        
+        $clinic = Clinic::findOrFail($id);
+
+        if($clinic_with_same_cnpj && $clinic_with_same_cnpj->id != $clinic->id) {
             return response()->json([
                 'message'   => 'This cnpj already exists in the database.',
             ], 409);
-        }
-
-        $clinic = Clinic::findOrFail($id);
-        
+        }   
         if ($clinic->user_id == Auth::user()->id) {            
             
             $clinic->nome = $request->nome;

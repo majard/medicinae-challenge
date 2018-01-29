@@ -17,13 +17,13 @@
                 </tr>
 
                 <tr>                     
-                    <td class="table-text">
+                    <td id="logo" class="table-text">
                         <div> <img src="{{ $logo_url }}"> </div>
                     </td>
-                    <td class="table-text">
+                    <td id="nome" class="table-text">
                         <div>{{$health_insurance_company->nome }}</div>
                     </td>
-                    <td class="table-text">
+                    <td id="status" class="table-text">
                         <div>   
                             @if ($health_insurance_company->status)
                                 Ativo
@@ -37,7 +37,7 @@
                         <button type="button" class="btn btn-danger health_insurance delete-modal" value="{{$health_insurance_company->id}}" data-dismiss="modal">
                             <span class='glyphicon glyphicon-trash'></span> Deletar
                         </button>      
-                        <button class="health-insurance edit-modal btn btn-edit" data-nome="{{$health_insurance_company->nome}}" 
+                        <button class="health-insurance edit-modal btn btn-edit" 
                         data-status="{{$health_insurance_company->status}}" value="{{$health_insurance_company->id}}">
                         <span class="glyphicon glyphicon-edit"></span> Editar
                         </button>

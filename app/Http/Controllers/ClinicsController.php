@@ -81,12 +81,6 @@ class ClinicsController extends Controller
         $hics = HealthInsuranceCompany::orderBy('nome', 'asc')->get();
 
         $clinic = Clinic::findOrFail($id);
-        
-        if(!$clinic) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
 
         return view('clinics.show', ['clinic' => $clinic, 'hics' => $hics]);
     }
@@ -111,13 +105,14 @@ class ClinicsController extends Controller
      */
     public function update(StoreClinic $request, $id)
     {
-        if(Clinic::where('cnpj', '=', Input::get('cnpj'))->exists()) {
+        $clinic_with_same_cnpj = Clinic::where('cnpj', '=', Input::get('cnpj'))->first();        
+        $clinic = Clinic::findOrFail($id);
+
+        if($clinic_with_same_cnpj && $clinic_with_same_cnpj->id != $clinic->id) {
             return response()->json([
                 'message'   => 'This cnpj already exists in the database.',
             ], 409);
         }
-
-        $clinic = Clinic::findOrFail($id);
         
         if ($clinic->user_id == Auth::user()->id) {            
             
@@ -165,8 +160,6 @@ class ClinicsController extends Controller
             ], 403);
         }
     }
-
-
     
     /**
      * Remove the specified resource from storage.
@@ -186,12 +179,12 @@ class ClinicsController extends Controller
                 'message'   => 'Health Insurance Company is not active!',
             ], 409);
         }
-
+        
         if ($clinic->user_id == Auth::user()->id) {
             $clinic->health_insurance_companies()->attach($health_insurance_company_id);
-            return response()->json($clinic, 201);
-            
+            return response()->json($clinic, 201);            
         }
+
         else {
             return response()->json([
                 'message'   => 'User does not have authority to delete this relationshionship.',

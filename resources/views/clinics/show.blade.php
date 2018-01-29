@@ -7,25 +7,19 @@
     <div class="panel-body">
         <table class="table table-striped clinic-table">
 
-
             <!-- Table Body -->
             <tbody>
                 <tr>
-                    <td>
-                        Nome da Clínica
-                    </td>
-                    <td>
-                        CNPJ
-                    </td>
-                    <td>
-                    </td>
+                    <td> Nome da Clínica </td>
+                    <td> CNPJ </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <!-- Clinic Name -->
-                    <td class="table-text">
+                    <td id="nome" class="table-text">
                         <div>{{ $clinic->nome }}</div>
                     </td>
-                    <td class="table-text">
+                    <td id="cnpj" class="table-text">
                         <div>{{ $clinic->cnpj }}</div>
                     </td>                            
                     @if (Auth::user() && $clinic->user_id == Auth::user()->id)
@@ -33,12 +27,12 @@
                         <button type="button" id="deleteClinic" class="btn btn-danger clinic delete-modal" value="{{$clinic->id}}" data-dismiss="modal">
                             <span class='glyphicon glyphicon-trash'></span> Deletar
                         </button>      
-                        <button class="clinic btn btn-edit edit-modal" data-nome="{{$clinic->nome}}" data-cnpj="{{$clinic->cnpj}}" value="{{$clinic->id}}">
+                        <button class="clinic btn btn-edit edit-modal" value="{{$clinic->id}}">
                         <span class="glyphicon glyphicon-edit"></span> Editar
                         </button>
                         
                         <button type="button" class="btn btn-primary relationship add-modal" value="{{$clinic->id}}" data-dismiss="modal">
-                            <span class='glyphicon glyphicon-plus'></span> Adicionar novo relacionamento
+                            <span class='glyphicon glyphicon-plus'></span> Associar um novo plano de saúde
                         </button>                     
                  
                     </td>
@@ -47,37 +41,24 @@
             </tbody>
         </table>
     </div>
-
-    
     
     <!-- Current Health Insurance Companies Accepted -->
-    @if ((count($clinic->health_insurance_companies) > 0) && (($clinic->user_id == Auth::user()->id)))
+    @if ($clinic->user_id == Auth::user()->id)
 
-        <div class="panel panel-default">
+        <div id="hic_list" class="panel panel-default">
             <div class="panel-heading">
                 Planos de saúde aceitos:
             </div>
             <div class="panel-body">
                 <table class="table table-striped clinic-table">
-
-                    <!-- Table Headings -->
-                    <thead>
-                        <th class="text-center"> Plano de saude</th>
-                        <th>&nbsp;</th>
-                    </thead>
-
                     <!-- Table Body -->
-                    <tbody>
-                                
+                    <tbody>                                
                         <tr>
                             <td> Logo </td>
                             <td> Nome do Plano de Saúde</td>
-
                         </tr>
 
                         @foreach ($clinic->health_insurance_companies as $health_insurance_company)
-                        
-
                         <tr>                     
                             <td class="table-text">
                                 <div> <img src="{{ Storage::url($health_insurance_company->logo) }}"> </div>
@@ -161,16 +142,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
 
     <!-- Modal form to add a relationship -->
     <div id="addRelationshipModal" class="modal fade" role="dialog">

@@ -28,7 +28,7 @@ class CreateClinicHealthInsuranceCompany extends Migration
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->index(['clinic_id', 'health_insurance_company_id'], 'c_id_hic_id');
+            $table->unique(['clinic_id', 'health_insurance_company_id'], 'c_id_hic_id');
         });
     }
 
