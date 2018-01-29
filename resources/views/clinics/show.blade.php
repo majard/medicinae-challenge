@@ -43,7 +43,7 @@
     </div>
     
     <!-- Current Health Insurance Companies Accepted -->
-    @if ($clinic->user_id == Auth::user()->id)
+    @if ( Auth::user() && $clinic->user_id == Auth::user()->id)
 
         <div id="hic_list" class="panel panel-default">
             <div class="panel-heading">
