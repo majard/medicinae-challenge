@@ -64,6 +64,12 @@ class HealthInsuranceCompanyController extends Controller
      */
     public function store(StoreHealthInsuranceCompany $request)
     {                       
+        if (HealthInsuranceCompany::where('nome', $request->nome)->exists()) {            
+            return response()->json([
+                'message'   => 'This name already exists in the database.',
+            ], 409);
+        }
+
         $health_insurance_company = new HealthInsuranceCompany;
         $health_insurance_company->nome = $request->nome;
 
@@ -92,16 +98,9 @@ class HealthInsuranceCompanyController extends Controller
      */
     public function show($id)
     {
-        //
-        
+        //        
         $health_insurance_company = HealthInsuranceCompany::findOrFail($id);
-        
-        if(!$health_insurance_company) {
-            return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
-        }
-        
+                
         $url = Storage::url($health_insurance_company->logo);
 
         return view('health_insurance_companies.show', ['logo_url' => $url, 'health_insurance_company' => $health_insurance_company]);
@@ -128,11 +127,11 @@ class HealthInsuranceCompanyController extends Controller
     public function update(StoreHealthInsuranceCompany $request, $id)
     {
         $health_insurance_company = HealthInsuranceCompany::findOrFail($id);
-
-        if(!$health_insurance_company) {
+        $same_name_co = HealthInsuranceCompany::where('nome', $request->nome)->first();
+        if ($same_name_co && $same_name_co->id != $health_insurance_company->id ) {            
             return response()->json([
-                'message'   => 'Record not found',
-            ], 404);
+                'message'   => 'This name already exists in the database.',
+            ], 409);
         }
 
         $health_insurance_company->nome = $request->nome;
@@ -169,7 +168,6 @@ class HealthInsuranceCompanyController extends Controller
     public function destroy($id)
     {
         //
-        
         $health_insurance_company = HealthInsuranceCompany::findOrFail($id);
 
         if(!$health_insurance_company) {

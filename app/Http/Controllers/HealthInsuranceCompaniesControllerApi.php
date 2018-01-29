@@ -21,6 +21,15 @@ class HealthInsuranceCompaniesControllerApi extends Controller
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }
 
+    protected function uploadToS3($request, $health_insurance_company) {
+        $image = $request->file('image');
+        $imageFileName = $health_insurance_company->nome . time() . '.' . $image->getClientOriginalExtension();
+        $s3 = \Storage::disk('s3');
+        $filePath = '/logos/' . $imageFileName;
+        $s3->put($filePath, file_get_contents($image), 'public');
+        return $filePath;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -43,17 +52,19 @@ class HealthInsuranceCompaniesControllerApi extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(StoreHealthInsuranceCompany $request)
-    {                       
+    {    
+        if (HealthInsuranceCompany::where('nome', $request->nome)->exists()) {            
+            return response()->json([
+                'message'   => 'This name already exists in the database.',
+            ], 409);
+        }
+
         $health_insurance_company = new HealthInsuranceCompany;
         $health_insurance_company->nome = $request->nome;
 
-        $health_insurance_company->status = $request->status;            
+        $health_insurance_company->status = $request->status;        
 
-        $image = $request->file('image');
-        $imageFileName = time() . '.' . $image->getClientOriginalExtension();
-        $s3 = \Storage::disk('s3');
-        $filePath = '/logos/' . $imageFileName;
-        $s3->put($filePath, file_get_contents($image), 'public');
+        $filePath = $this->uploadToS3($request, $health_insurance_company);
         $health_insurance_company->logo = $filePath; 
         
         $health_insurance_company->save();
@@ -87,6 +98,13 @@ class HealthInsuranceCompaniesControllerApi extends Controller
     {
         $health_insurance_company = HealthInsuranceCompany::findOrFail($id);
 
+        $same_name_co = HealthInsuranceCompany::where('nome', $request->nome)->first();
+        if ($same_name_co && $same_name_co->id != $health_insurance_company->id ) {                
+            return response()->json([
+                'message'   => 'This name already exists in the database.',
+            ], 409);
+        }
+
         $health_insurance_company->nome = $request->nome;
 
         $health_insurance_company->status = $request->status;            
@@ -97,11 +115,7 @@ class HealthInsuranceCompaniesControllerApi extends Controller
             Storage::disk('s3')->delete($path);
         }
 
-        $image = $request->file('image');
-        $imageFileName = 'logo'. $image->getClientOriginalExtension();
-        $s3 = \Storage::disk('s3');
-        $filePath = '/logos/' . $health_insurance_company->id . '/' . $imageFileName;
-        $s3->put($filePath, file_get_contents($image), 'public');
+        $filePath = $this->uploadToS3($request, $health_insurance_company);
         $health_insurance_company->logo = $filePath; 
 
         $health_insurance_company->save();
