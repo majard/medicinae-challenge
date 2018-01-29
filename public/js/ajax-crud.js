@@ -1,9 +1,10 @@
 const SUCCESS_MESSAGE_DURATION = 1500;
 const ERROR_MESSAGE_DURATION = 3000;
 const REDIRECT_DELAY = 2000;
+const FADE_IN_ANIMATION_TIMEOUT = 666
 
 $(document).ready(function() {
-    
+    // Create a clinic
     $(".create-clinic").click(function(e){
         $(this).prop('disabled', true);
         
@@ -63,6 +64,7 @@ $(document).ready(function() {
             }
         });
     }); 
+
     // Open edit modal
     $(document).on('click', '.clinic.edit-modal', function() {
         $('.clinic.edit').prop('disabled', false);
@@ -232,7 +234,7 @@ $(document).ready(function() {
         });
     });
 
-    // Edit a HIC
+    // Open modal to edit a HIC
     $(document).on('click', '.health-insurance.edit-modal', function() {
         $('.health_insurance.edit').prop('disabled', false);
         $('.modal-title').text('Edit');
@@ -244,6 +246,7 @@ $(document).ready(function() {
         $('#editModal').modal('show');
     });
 
+    // Edit a HIC
     $('.modal-footer').on('click', '.health_insurance.edit', function() {
         $(this).prop('disabled', true);
 
@@ -276,12 +279,25 @@ $(document).ready(function() {
                 else {
                     $('#status').text('Inativo');
                 }
+                
+                $("#form_logo_wrapper").load(location.href + " #form_logo_img");
+                
+                $("#logo_wrapper").fadeOut(FADE_IN_ANIMATION_TIMEOUT);
+
+                setTimeout(function(){
+                    $("#logo_wrapper").load(location.href + " #logo_img");
+
+                    setTimeout(function(){
+                        $("#logo_wrapper").fadeIn(FADE_IN_ANIMATION_TIMEOUT);
+                    }, FADE_IN_ANIMATION_TIMEOUT);
+                }, FADE_IN_ANIMATION_TIMEOUT);
+
 
                 toastr.success('A edição foi feita com sucesso!', 'Successo!', {timeOut: SUCCESS_MESSAGE_DURATION});                                    
             },
             
             error: function(data){
-                $(this).prop('disabled', false);
+                $('.health_insurance.edit').prop('disabled', false);
 
                 var errors = data.responseJSON.errors;
 
@@ -310,13 +326,14 @@ $(document).ready(function() {
         });
     });
     
-    // delete a health insurance company
+    // open modal to delete a health insurance company
     $(document).on('click', '.health_insurance.delete-modal', function() {
         $('.modal-title').text('Delete');
         $('#deleteModal').modal('show');
         id = $(this).val();
     });
 
+    // delete a health insurance company
     $('.modal-footer').on('click', '.health_insurance.delete', function() {
         $(this).prop('disabled', true);
                 
@@ -343,13 +360,14 @@ $(document).ready(function() {
         });
     });
     
-    // add a relationship
+    // open modal to add a relationship
     $(document).on('click', '.relationship.add-modal', function() {
         $('.modal-title').text('Adicionar plano de saúde');
         $('#addRelationshipModal').modal('show');
         clinic_id = $(this).val();
     });
 
+    // add a relationship
     $(document).on('click', '.relationship.add', function() {
         
         health_insurance_company_id = $(this).val();
@@ -380,13 +398,15 @@ $(document).ready(function() {
         });
     });
     
-    // delete a relationship
+    // open modal to delete a relationship
     $(document).on('click', '.relationship.delete-modal', function() {
         $('.modal-title').text('Delete');
         $('#deleteRelationshipModal').modal('show');
         health_insurance_company_id = $(this).val();
         clinic_id = $('#deleteClinic').val();
     });
+
+    // delete a relationship
     $('.modal-footer').on('click', '.relationship.delete', function() {
                 
         $.ajaxSetup({

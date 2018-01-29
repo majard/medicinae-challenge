@@ -67,7 +67,7 @@ class HealthInsuranceCompanyController extends Controller
         $health_insurance_company->status = $status;            
 
         $image = $request->file('image');
-        $imageFileName = time() . '.' . $image->getClientOriginalExtension();
+        $imageFileName = $health_insurance_company->nome . time() . '.' . $image->getClientOriginalExtension();
         $s3 = \Storage::disk('s3');
         $filePath = '/logos/' . $imageFileName;
         $s3->put($filePath, file_get_contents($image), 'public');

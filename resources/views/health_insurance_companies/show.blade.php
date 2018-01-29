@@ -7,7 +7,6 @@
     <div class="panel-body">
         <table class="table table-striped health_insurance_company-table">
 
-
             <!-- Table Body -->
             <tbody>
                 <tr>
@@ -18,7 +17,7 @@
 
                 <tr>                     
                     <td id="logo" class="table-text">
-                        <div> <img src="{{ $logo_url }}"> </div>
+                        <div id="logo_wrapper"> <img id="logo_img" src="{{ $logo_url }}"> </div>
                     </td>
                     <td id="nome" class="table-text">
                         <div>{{$health_insurance_company->nome }}</div>
@@ -68,8 +67,8 @@
                                 <p class="errorNome text-center alert alert-danger hidden"></p>
                             </div>
                         </div>                        
-                        <div class="form-group">
-                            <img src="{{ $logo_url }}"> 
+                        <div id="form_logo_wrapper"class="form-group">
+                            <img id="form_logo_img" src="{{ $logo_url }}"> 
                         </div>
                         <div class="form-group">
                             <label class="control-label col-sm-2" for="logo">Logo:</label>
