@@ -15,7 +15,7 @@ class CreateClinicsTable extends Migration
     {
         Schema::create('clinics', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('cnpj')->unique();
+            $table->string('cnpj')->unique();
             $table->string('nome');
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')
