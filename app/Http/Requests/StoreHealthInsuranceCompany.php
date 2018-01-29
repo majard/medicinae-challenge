@@ -28,4 +28,11 @@ class StoreHealthInsuranceCompany extends FormRequest
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:width=150,height=150',
         ];
     }
+    
+    public function messages()
+    {
+        return [
+            'image.dimensions' => 'A imagem do logo deve ter 150 x 150px',
+        ];
+    }
 }
