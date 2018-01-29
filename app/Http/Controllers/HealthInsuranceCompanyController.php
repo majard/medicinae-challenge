@@ -20,6 +20,15 @@ class HealthInsuranceCompanyController extends Controller
         $this->middleware('auth', ['except' => ['index']]);
     }
 
+    protected function uploadToS3($request, $health_insurance_company) {
+        $image = $request->file('image');
+        $imageFileName = $health_insurance_company->nome . time() . '.' . $image->getClientOriginalExtension();
+        $s3 = \Storage::disk('s3');
+        $filePath = '/logos/' . $imageFileName;
+        $s3->put($filePath, file_get_contents($image), 'public');
+        return $filePath;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -66,11 +75,7 @@ class HealthInsuranceCompanyController extends Controller
         }
         $health_insurance_company->status = $status;            
 
-        $image = $request->file('image');
-        $imageFileName = $health_insurance_company->nome . time() . '.' . $image->getClientOriginalExtension();
-        $s3 = \Storage::disk('s3');
-        $filePath = '/logos/' . $imageFileName;
-        $s3->put($filePath, file_get_contents($image), 'public');
+        $filePath = $this->uploadToS3($request, $health_insurance_company);
         $health_insurance_company->logo = $filePath; 
         
         $health_insurance_company->save();
@@ -147,11 +152,7 @@ class HealthInsuranceCompanyController extends Controller
             Storage::disk('s3')->delete($path);
         }
 
-        $image = $request->file('image');
-        $imageFileName = time() . '.' . $image->getClientOriginalExtension();
-        $s3 = \Storage::disk('s3');
-        $filePath = '/logos/' . $imageFileName;
-        $s3->put($filePath, file_get_contents($image), 'public');
+        $filePath = $this->uploadToS3($request, $health_insurance_company);
         $health_insurance_company->logo = $filePath; 
 
         $health_insurance_company->save();

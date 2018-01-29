@@ -1,7 +1,9 @@
 const SUCCESS_MESSAGE_DURATION = 1500;
 const ERROR_MESSAGE_DURATION = 3000;
 const REDIRECT_DELAY = 2000;
-const FADE_IN_ANIMATION_TIMEOUT = 666
+const FADE_IN_ANIMATION_TIMEOUT = 444
+const FADE_IN_ANIMATION_DURATION = 666
+
 
 $(document).ready(function() {
     // Create a clinic
@@ -282,13 +284,13 @@ $(document).ready(function() {
                 
                 $("#form_logo_wrapper").load(location.href + " #form_logo_img");
                 
-                $("#logo_wrapper").fadeOut(FADE_IN_ANIMATION_TIMEOUT);
+                $("#logo_wrapper").fadeOut(FADE_IN_ANIMATION_DURATION);
 
                 setTimeout(function(){
                     $("#logo_wrapper").load(location.href + " #logo_img");
 
                     setTimeout(function(){
-                        $("#logo_wrapper").fadeIn(FADE_IN_ANIMATION_TIMEOUT);
+                        $("#logo_wrapper").fadeIn(FADE_IN_ANIMATION_DURATION);
                     }, FADE_IN_ANIMATION_TIMEOUT);
                 }, FADE_IN_ANIMATION_TIMEOUT);
 
