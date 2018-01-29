@@ -269,7 +269,8 @@ $(document).ready(function() {
             contentType: false,
             data: formData,           
             
-            success: function(data) {                     
+            success: function(data) {         
+
                 $('.errorNome').addClass('hidden');
                 $('.errorImage').addClass('hidden');
                 $('#editModal').modal('hide');
@@ -282,18 +283,19 @@ $(document).ready(function() {
                     $('#status').text('Inativo');
                 }
                 
-                $("#form_logo_wrapper").load(location.href + " #form_logo_img");
-                
-                $("#logo_wrapper").fadeOut(FADE_IN_ANIMATION_DURATION);
-
-                setTimeout(function(){
-                    $("#logo_wrapper").load(location.href + " #logo_img");
+                if (formData.get('image')){
+                    $("#form_logo_wrapper").load(location.href + " #form_logo_img");
+                    
+                    $("#logo_wrapper").fadeOut(FADE_IN_ANIMATION_DURATION);
 
                     setTimeout(function(){
-                        $("#logo_wrapper").fadeIn(FADE_IN_ANIMATION_DURATION);
-                    }, FADE_IN_ANIMATION_TIMEOUT);
-                }, FADE_IN_ANIMATION_TIMEOUT);
+                        $("#logo_wrapper").load(location.href + " #logo_img");
 
+                        setTimeout(function(){
+                            $("#logo_wrapper").fadeIn(FADE_IN_ANIMATION_DURATION);
+                        }, FADE_IN_ANIMATION_TIMEOUT);
+                    }, FADE_IN_ANIMATION_TIMEOUT);
+                }
 
                 toastr.success('A edição foi feita com sucesso!', 'Successo!', {timeOut: SUCCESS_MESSAGE_DURATION});                                    
             },
