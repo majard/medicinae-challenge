@@ -23,7 +23,7 @@ class CreateClinicHealthInsuranceCompany extends Migration
             ->onDelete('cascade');
 
             $table->integer('health_insurance_company_id')->unsigned();
-            $table->foreign('health_insurance_company_id')
+            $table->foreign('health_insurance_company_id', 'hic_id')
             ->references('id')->on('health_insurance_companies')
             ->onUpdate('cascade')
             ->onDelete('cascade');
