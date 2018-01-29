@@ -28,7 +28,7 @@
                     <td class="table-text">
                         <div>{{ $clinic->cnpj }}</div>
                     </td>                            
-                    @if ($clinic->user_id == Auth::user()->id)
+                    @if (Auth::user() && $clinic->user_id == Auth::user()->id)
                     <td>                        
                         <button type="button" id="deleteClinic" class="btn btn-danger clinic delete-modal" value="{{$clinic->id}}" data-dismiss="modal">
                             <span class='glyphicon glyphicon-trash'></span> Deletar
