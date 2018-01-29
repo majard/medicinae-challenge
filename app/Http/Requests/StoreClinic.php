@@ -28,7 +28,7 @@ class StoreClinic extends FormRequest
     {
         return [
             'nome' => 'required',
-            'cnpj' => 'required',
+            'cnpj' => 'required|cnpj',
         ];
     }
 }
