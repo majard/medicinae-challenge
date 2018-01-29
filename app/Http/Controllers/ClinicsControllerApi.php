@@ -14,7 +14,7 @@ use App\Clinic;
 use App\HealthInsuranceCompany;
 
 class ClinicsControllerApi extends Controller
-{
+{    
     //
 
     /**
