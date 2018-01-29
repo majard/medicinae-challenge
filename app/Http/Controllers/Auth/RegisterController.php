@@ -6,7 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Auth\Events\ Registered;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 
 
@@ -30,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -91,11 +91,11 @@ class RegisterController extends Controller
         // registered() method or it returns null, redirect him to
         // some other URL. In our case, we just need to implement
         // that method to return the correct response.
-        return $this->registered($request, $user)
+        return $this->registeredApi($request, $user)
                         ?: redirect($this->redirectPath());
     }
     
-    protected function registered(Request $request, $user)
+    protected function registeredApi(Request $request, $user)
     {
         $user->generateToken();
 
