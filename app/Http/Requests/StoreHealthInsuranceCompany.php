@@ -25,7 +25,7 @@ class StoreHealthInsuranceCompany extends FormRequest
     {
         return [
             'nome' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:width=150,height=150',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:width=150,height=150',
         ];
     }
 }

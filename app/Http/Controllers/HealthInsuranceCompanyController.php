@@ -64,6 +64,12 @@ class HealthInsuranceCompanyController extends Controller
      */
     public function store(StoreHealthInsuranceCompany $request)
     {                       
+        if (!Input::hasFile('image')){
+            return response()->json([
+                'message'   => 'Image field is required.',
+            ], 400);
+        }
+
         if (HealthInsuranceCompany::where('nome', $request->nome)->exists()) {            
             return response()->json([
                 'message'   => 'This name already exists in the database.',
@@ -147,12 +153,14 @@ class HealthInsuranceCompanyController extends Controller
 
         $path = $health_insurance_company->logo;
 
-        if(Storage::disk('s3')->exists($path) && Input::hasFile('image')) {
-            Storage::disk('s3')->delete($path);
+        if(Input::hasFile('image')) {            
+            $filePath = $this->uploadToS3($request, $health_insurance_company);
+            $health_insurance_company->logo = $filePath; 
+            
+            if (Storage::disk('s3')->exists($path)) {
+                Storage::disk('s3')->delete($path);
+            }
         }
-
-        $filePath = $this->uploadToS3($request, $health_insurance_company);
-        $health_insurance_company->logo = $filePath; 
 
         $health_insurance_company->save();
 
