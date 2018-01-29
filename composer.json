@@ -7,10 +7,10 @@
     "require": {
         "php": ">=7.0.0",
         "fideloper/proxy": "~3.3",
+        "geekcom/validator-docs": "1.*",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
-        "league/flysystem-aws-s3-v3": "~1.0",
-        "geekcom/validator-docs" : "1.*"       
+        "league/flysystem-aws-s3-v3": "~1.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
