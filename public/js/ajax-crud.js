@@ -1,8 +1,8 @@
 const SUCCESS_MESSAGE_DURATION = 1500;
 const ERROR_MESSAGE_DURATION = 3000;
 const REDIRECT_DELAY = 2000;
-const FADE_IN_ANIMATION_TIMEOUT = 444
-const FADE_IN_ANIMATION_DURATION = 666
+const FADE_IN_ANIMATION_TIMEOUT = 320;
+const FADE_IN_ANIMATION_DURATION = 300;
 
 
 $(document).ready(function() {
@@ -238,12 +238,17 @@ $(document).ready(function() {
 
     // Open modal to edit a HIC
     $(document).on('click', '.health-insurance.edit-modal', function() {
+        $status = $('#status_edit');
+        if ($status.val()) {
+            $status.prop('checked', true);
+        } else {
+            $status.prop('checked', false);            
+        }
+        
         $('.health_insurance.edit').prop('disabled', false);
         $('.modal-title').text('Edit');
-        $('#cnpj_edit').val($('#cnpj').text());
         $('#nome_edit').val($('#nome').text());
-        $('#status_edit').val($(this).data('status'));
-        $('#logo_edit').val($("logo").text());
+        $('#logo_edit').val($("#logo").text());
         id = $(this).val();
         $('#editModal').modal('show');
     });
@@ -277,22 +282,32 @@ $(document).ready(function() {
                 $('#nome').text(data.nome);
 
                 if (data.status) {
+                    $status.val(true);
+                    $status.prop('checked', true);
                     $('#status').text('Ativo');
+                    $('#form_status_text').text('Ativo');
                 }
-                else {
+                else {                    
+                    $status.val(null);
+                    $status.prop('checked', false);
                     $('#status').text('Inativo');
+                    $('#form_status_text').text('Inativo');
                 }
                 
                 if (formData.get('image')){
+                    // update the image in the form
                     $("#form_logo_wrapper").load(location.href + " #form_logo_img");
                     
                     $("#logo_wrapper").fadeOut(FADE_IN_ANIMATION_DURATION);
+
+                    //$("#logo_wrapper").animate({ width: '-=170px', height: '-=170px' }, FADE_IN_ANIMATION_DURATION);
 
                     setTimeout(function(){
                         $("#logo_wrapper").load(location.href + " #logo_img");
 
                         setTimeout(function(){
                             $("#logo_wrapper").fadeIn(FADE_IN_ANIMATION_DURATION);
+                            //$("#logo_wrapper").animate({ width: '+=170px', height: '+=170px' }, FADE_IN_ANIMATION_DURATION);
                         }, FADE_IN_ANIMATION_TIMEOUT);
                     }, FADE_IN_ANIMATION_TIMEOUT);
                 }
@@ -328,6 +343,17 @@ $(document).ready(function() {
                 }
             }
         });
+    });
+    
+    // Toggle form status text based on checkbox input
+    $(document).on('click', '#status_edit', function() {
+        if ($(this).is(':checked')) {
+            $('#form_status_text').text('Ativo');
+            $(this).val(true);
+        } else {
+            $('#form_status_text').text('Inativo');
+            $(this).val(null);
+        }
     });
     
     // open modal to delete a health insurance company

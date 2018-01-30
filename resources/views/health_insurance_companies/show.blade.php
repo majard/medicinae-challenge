@@ -59,28 +59,39 @@
                 <div class="modal-body">
                     <form enctype="multipart/form-data" id="upload_form" action="" class="form-horizontal">
                         {{ csrf_field() }}
-
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="nome">Nome do Plano de Saúde:</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="nome" id="nome_edit">
-                                <p class="errorNome text-center alert alert-danger hidden"></p>
-                            </div>
-                        </div>                        
+                                       
                         <div id="form_logo_wrapper"class="form-group">
                             <img id="form_logo_img" src="{{ $logo_url }}"> 
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="logo">Logo:</label>
-                            <div class="col-sm-10">
+                            <label class="control-label aligned-left col-sm-5" for="nome">Nome do Plano de Saúde:</label>
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" name="nome" id="nome_edit">
+                                <p class="errorNome text-center alert alert-danger hidden"></p>
+                            </div>
+                        </div>         
+                        <div class="form-group">
+                            <label class="control-label aligned-left col-sm-5" for="logo">Logo:</label>
+                            <div class="col-sm-7">
                                 <input type="file" class="form-control" name="image" id="logo_edit" autofocus>
                                 <p class="errorImage text-center alert alert-danger hidden"></p>
                             </div>
                         </div>               
                         <div class="form-group">
-                            <label class="control-label col-sm-2" for="status">Status:</label>
-                            <div class="col-sm-10">
-                                <input type="checkbox" class="form-control" name="status" id="status_edit" autofocus>
+                            <label class="control-label aligned-left col-sm-5" for="status">
+                                Status:
+                                <span id="form_status_text">
+                                    @if ($health_insurance_company->status)
+                                        Ativo
+                                    @else
+                                        Inativo
+                                    @endif
+                                </span>
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="checkbox" value="{{$health_insurance_company->status}}" 
+                                    class="form-control" name="status" id="status_edit" autofocus>
+
                                 <p class="errorStatus text-center alert alert-danger hidden"></p>
                             </div>
                         </div>

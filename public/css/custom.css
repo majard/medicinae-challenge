@@ -55,7 +55,10 @@ html, body {
 }
 
 #form_logo_wrapper {
-    width: 200px;
+    width: 170px;
     height: 170px;
     margin-left: 2%;
+}
+label.control-label.aligned-left {
+    text-align: left;
 }
