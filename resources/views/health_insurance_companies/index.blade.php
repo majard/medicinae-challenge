@@ -3,8 +3,12 @@
 @section('content')
 
     <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <a  href="{{ route('display_health_insurance_company_signup') }}"> Cadastrar um novo plano de saúde</a>
+        <div class="add-hic align-button">
+            <a  href="{{ route('display_health_insurance_company_signup') }}"> 
+                <button type="button" class="btn btn-primary">
+                    <span class='glyphicon glyphicon-plus'></span> Cadastrar um novo plano de saúde
+                </button>
+            </a>
         </div>
     </div>
 

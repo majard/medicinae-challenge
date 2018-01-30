@@ -67,3 +67,13 @@ label.control-label.aligned-left {
     width: 80vw;
     margin: 42px auto;
 }
+
+.align-button {
+    margin-left: 36%;
+    margin-top: 20px;
+    margin-bottom: 42px;
+}
+
+.align-button button {
+    width: 280px;
+}

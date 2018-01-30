@@ -3,9 +3,13 @@
 @section('content')
     <!-- Create Clinics Form... -->
     <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <a class="font-weight-bold" href="{{ route('display_clinic_signup') }}"> Cadastrar uma nova clínica</a
-        ></div>
+        <div class="add-clinic align-button">
+            <a class="font-weight-bold" href="{{ route('display_clinic_signup') }}"> 
+                <button type="button" class="btn btn-primary">
+                    <span class='glyphicon glyphicon-plus'></span> Cadastrar uma nova clínica 
+                </button>
+            </a>
+        </div>
     </div>
 
     <!-- Current Clinics -->
