@@ -30,10 +30,6 @@ class AddsSoftDeleteToTables extends Migration
     public function down()
     {
         //
-        Schema::table('clinics', function ($table) {
-            $table->dropSoftDeletes();
-        });
-
         Schema::table('health_insurance_companies', function ($table) {
             $table->dropSoftDeletes();
         });
