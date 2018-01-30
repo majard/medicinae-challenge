@@ -62,3 +62,8 @@ html, body {
 label.control-label.aligned-left {
     text-align: left;
 }
+
+#content {
+    width: 80vw;
+    margin: 42px auto;
+}

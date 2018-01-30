@@ -13,6 +13,7 @@
                     <td> Logo </td>
                     <td> Nome da Clínica</td>
                     <td> Status </td>
+                    <td> Opções </td>
                 </tr>
 
                 <tr>                     

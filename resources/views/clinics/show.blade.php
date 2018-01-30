@@ -12,7 +12,7 @@
                 <tr>
                     <td> Nome da Clínica </td>
                     <td> CNPJ </td>
-                    <td></td>
+                    <td> Opções</td>
                 </tr>
                 <tr>
                     <!-- Clinic Name -->
@@ -21,7 +21,7 @@
                     </td>
                     <td id="cnpj" class="table-text">
                         <div>{{ $clinic->cnpj }}</div>
-                    </td>                            
+                    </td>                         
                     @if (Auth::user() && $clinic->user_id == Auth::user()->id)
                     <td>                        
                         <button type="button" id="deleteClinic" class="btn btn-danger clinic delete-modal" value="{{$clinic->id}}" data-dismiss="modal">
@@ -56,6 +56,7 @@
                         <tr>
                             <td> Logo </td>
                             <td> Nome do Plano de Saúde</td>
+                            <td> <td>   
                         </tr>
 
                         @foreach ($clinic->health_insurance_companies as $health_insurance_company)
@@ -108,10 +109,10 @@
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary clinic edit">
-                            <span class='glyphicon glyphicon-check'></span> Edit
+                            <span class='glyphicon glyphicon-check'></span> Editar
                         </button>
                         <button type="button" class="btn btn-warning" data-dismiss="modal">
-                            <span class='glyphicon glyphicon-remove'></span> Close
+                            <span class='glyphicon glyphicon-remove'></span> Fechar
                         </button>
                     </div>
                 </div>
