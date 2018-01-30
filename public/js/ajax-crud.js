@@ -239,7 +239,7 @@ $(document).ready(function() {
     // Open modal to edit a HIC
     $(document).on('click', '.health-insurance.edit-modal', function() {
         $status = $('#status_edit');
-        if ($status.val()) {
+        if ($status.val() && $status.val() != 0) {
             $status.prop('checked', true);
         } else {
             $status.prop('checked', false);            
